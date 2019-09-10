@@ -7,12 +7,9 @@ class AuthPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-        body: Stack(
-      alignment: Alignment.center,
-      children: <Widget>[
-        Container(color: Colors.green),
-        Column(
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -23,13 +20,13 @@ class AuthPage extends StatelessWidget {
             ),
             Stack(children: <Widget>[
               Padding(
-                padding: EdgeInsets.all(size.width * 0.05),
+                padding: EdgeInsets.all(size.width * 0.06),
                 child: LoginComponent(),
               ),
             ]),
           ],
         ),
-      ],
-    ));
+      ),
+    );
   }
 }
