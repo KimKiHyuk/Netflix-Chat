@@ -7,6 +7,7 @@ class LoginComponent extends StatelessWidget {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final Validator validator = Validator(); // TODO : dependency injection
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +29,13 @@ class LoginComponent extends StatelessWidget {
                   controller: _emailController,
                   decoration: InputDecoration(
                       icon: Icon(Icons.email), labelText: 'Email'),
-                  validator: new Validator()
-                      .stringValadator, // TODO : dependency injection
+                  validator: validator.stringValadator,
                 ),
                 TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                         icon: Icon(Icons.security), labelText: 'Password'),
-                    validator: (String value) {
-                      return value.isEmpty ? 'Please input data' : null;
-                    }),
+                    validator: validator.stringValadator),
                 Text('Forget password?'),
                 Container(
                     margin: EdgeInsets.only(top: 15.0),
@@ -53,7 +51,11 @@ class LoginComponent extends StatelessWidget {
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          print("button pressed");
+                        }
+                      },
                     ))
               ]),
         ),

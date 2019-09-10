@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:netflix_together/Components/LoginComponent.dart';
+import 'package:netflix_together/Components/ProfileImageComponent.dart';
 
 class AuthPage extends StatelessWidget {
   @override
@@ -13,11 +14,7 @@ class AuthPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              width: 200,
-              height: 200,
-              color: Colors.blue,
-            ),
+            ProfileImageComponent(),
             Stack(children: <Widget>[
               Padding(
                 padding: EdgeInsets.all(size.width * 0.06),
