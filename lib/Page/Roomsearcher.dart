@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:netflix_together/Components/LoadingAnimation.dart';
+import 'package:netflix_together/Components/CurrentAppUserCounter.dart';
 import 'package:netflix_together/Components/LoadingAnimation.dart';
 import 'package:netflix_together/Components/MatchPeopleButton.dart';
 import 'package:netflix_together/Components/PeopleSelectorComponents.dart';
@@ -16,6 +16,7 @@ class RoomSearcher extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          CurrentAppUserCounter(),
           PeopleSelectorComponents(),
           MatchPeopleButton(), // TODO: when animation is activating, stop animation button is clicked again
           LoadingAnimation(),

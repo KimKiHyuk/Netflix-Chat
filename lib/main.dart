@@ -6,6 +6,8 @@ import 'package:netflix_together/Page/AuthPage.dart';
 import 'package:netflix_together/Store/LoginStore.dart';
 import 'package:provider/provider.dart';
 
+import 'Store/UserStore.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -23,11 +25,12 @@ class ApplicationEntry extends StatelessWidget {
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (context, snapshot) {
-        if (snapshot.data == null) {
+        if (snapshot.data == null) {   // TODO : change single proviers as multiple provider
           return ChangeNotifierProvider<LoginStore>.value(
               value: LoginStore(), child: AuthPage());
         } else {
-          return RoomSearcher(email: snapshot.data.email);
+          return ChangeNotifierProvider<UserStore>.value(
+              value: UserStore(), child: RoomSearcher(email: snapshot.data.email));
         }
       },
     );
