@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_together/Store/LoginStore.dart';
 import 'package:netflix_together/validator/validator.dart';
+import 'package:provider/provider.dart';
 
 class LoginComponent extends StatelessWidget {
-  final GlobalKey<FormState> _formKey =
-      GlobalKey<FormState>(); // TODO : Dependency injecton
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO : Dependency injecton
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -36,27 +37,29 @@ class LoginComponent extends StatelessWidget {
                     decoration: InputDecoration(
                         icon: Icon(Icons.security), labelText: 'Password'),
                     validator: validator.stringValadator),
-                Text('Forget password?'),
                 Container(
                     margin: EdgeInsets.only(top: 15.0),
                     alignment: Alignment(0.0, 0.0),
-                    child: RaisedButton(
-                      color: Colors.blue,
-                      child: SizedBox(
-                        width: size * 0.5,
-                        child: Text(
-                          'Login',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          print("button pressed");
-                        }
-                      },
-                    ))
+                    child: Consumer<LoginStore>(
+                      builder: (context, loginStore, child) =>
+                          RaisedButton(
+                            color: loginStore.isJoin ? Colors.blue : Colors.red,
+                            child: SizedBox(
+                              width: size * 0.5,
+                              child: Text(
+                                loginStore.isJoin ? 'Login' : 'Join',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                print("button pressed");
+                              }
+                            },
+                          )
+                    )),
               ]),
         ),
       ),
