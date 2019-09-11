@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_together/Components/ClickedMatchButtonAnimation.dart';
+import 'package:netflix_together/Components/LoadingAnimation.dart';
 
 class MatchPeopleButton extends StatelessWidget {
   @override
