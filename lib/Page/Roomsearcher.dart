@@ -19,7 +19,7 @@ class RoomSearcher extends StatelessWidget {
           CurrentAppUserCounter(),
           PeopleSelectorComponents(),
           MatchPeopleButton(), // TODO: when animation is activating, stop animation button is clicked again
-          LoadingAnimation(),
+         // LoadingAnimation(),
         ],
       )
     );

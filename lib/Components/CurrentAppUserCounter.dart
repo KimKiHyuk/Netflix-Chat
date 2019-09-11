@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_together/FirebaseAPI/Get.dart';
 import 'package:netflix_together/Store/UserStore.dart';
 import 'package:provider/provider.dart';
 
@@ -14,8 +16,7 @@ class Counter extends State<CurrentAppUserCounter> {
   Widget build(BuildContext context) {
     return Container(
       child: Consumer<UserStore>(
-        builder: (context, userStore, child) =>
-            Text('현재 접속자 수는 : ' + userStore.OnlineUserCount.toString()),
+        builder: (context, userStore, child) => Text('현재 접속자 수는 : ' + Get().GetCount().toString()),
       ),
     );
   }
