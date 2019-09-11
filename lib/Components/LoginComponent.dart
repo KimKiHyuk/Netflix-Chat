@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_together/Store/LoginStore.dart';
 import 'package:netflix_together/validator/validator.dart';
@@ -9,6 +10,26 @@ class LoginComponent extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final Validator validator = Validator(); // TODO : dependency injection
+
+  void _Registeration(BuildContext context) async {
+    final AuthResult result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.value.text, password: _passwordController.value.text);
+
+    FirebaseUser user = result.user;
+
+    if (user == null) {
+      print('faild to registeration');
+    }
+  }
+
+  void _Login(BuildContext context) async {
+    final AuthResult result = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.value.text, password: _passwordController.value.text);
+
+    FirebaseUser user = result.user;
+
+    if (user == null) {
+      print('fail to login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +68,7 @@ class LoginComponent extends StatelessWidget {
                             child: SizedBox(
                               width: size * 0.5,
                               child: Text(
-                                loginStore.isJoin ? 'Login' : 'Join',
+                                loginStore.isJoin ? 'Join' : 'Login',
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -56,6 +77,7 @@ class LoginComponent extends StatelessWidget {
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
                                 print("button pressed");
+                                loginStore.isJoin ? _Registeration(context) : _Login(context);
                               }
                             },
                           )
