@@ -13,12 +13,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      body: Splash(),
+      body: ApplicationEntry(),
     ));
   }
 }
 
-class Splash extends StatelessWidget {
+class ApplicationEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
