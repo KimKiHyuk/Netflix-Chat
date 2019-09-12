@@ -15,9 +15,10 @@ class Counter extends State<CurrentAppUserCounter> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Consumer<UserStore>(
-        builder: (context, userStore, child) => Text('현재 접속자 수는 : ' + Get().GetCount().toString()),
-      ),
-    );
+        child: FutureBuilder(future: Get().GetOnlineUserCount(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return Text('현재 접속 유저 수 : ' + snapshot.data.toString());
+        }),
+      );
   }
 }
