@@ -1,34 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_together/Data/User.dart';
+import 'package:netflix_together/FirebaseAPI/DataManipulator.dart';
 import 'package:netflix_together/Store/LoginStore.dart';
 import 'package:netflix_together/validator/validator.dart';
 import 'package:provider/provider.dart';
 
 class LoginComponent extends StatelessWidget {
+  // move to uill.dart
+  static String uid = null;
+  //
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO : Dependency injecton
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final Validator validator = Validator(); // TODO : dependency injection
+  final DataManipulator _dbCommit = DataManipulator(); // TODO : dependecy injectionm
 
   void _Registeration(BuildContext context) async {
     final AuthResult result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.value.text, password: _passwordController.value.text);
 
     FirebaseUser user = result.user;
+    uid = user.uid;
 
     if (user == null) {
       print('faild to registeration');
+      return;
     }
+
+    _dbCommit.CreateUser(user.uid, UserStatus(online: true, timestamp: DateTime.now().toString()));
   }
 
   void _Login(BuildContext context) async {
     final AuthResult result = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.value.text, password: _passwordController.value.text);
 
     FirebaseUser user = result.user;
-
+    uid = user.uid;
     if (user == null) {
       print('fail to login');
     }
+
+    _dbCommit.UpdateUser(user.uid, UserStatus(online: true, timestamp: DateTime.now().toString()));
   }
 
   @override
