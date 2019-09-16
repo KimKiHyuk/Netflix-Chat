@@ -16,4 +16,12 @@ class FirebaseWrapper {
 
     return subscription;
   }
+
+  Future<void> RegisterChatQueue(String uid, String path) async {
+    FirebaseDatabase.instance.reference().child('chat').child(path).child(uid).set({
+      'selectedByServer' : false,
+      'timestamp': DateTime.now().toString(), // should be server time, Todo : Firebase.servervalue.time
+    });
+  }
+
 }

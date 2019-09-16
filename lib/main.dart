@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_together/Components/LoginComponent.dart';
@@ -33,6 +34,7 @@ class ApplicationEntry extends StatelessWidget {
           return ChangeNotifierProvider<LoginStore>.value(
               value: LoginStore(), child: AuthPage());
         } else {
+          FirebaseAuth.instance.currentUser().then((user) => LoginComponent.uid = user.uid);
           return ChangeNotifierProvider<UserStore>.value(
               value: UserStore(), child: RoomSearcher(email: snapshot.data.email));
         }
