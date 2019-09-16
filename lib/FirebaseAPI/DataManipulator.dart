@@ -37,5 +37,4 @@ class DataManipulator {
       return false;
     });
   }
-
 }
