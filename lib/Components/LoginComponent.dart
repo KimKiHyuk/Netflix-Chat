@@ -39,6 +39,7 @@ class LoginComponent extends StatelessWidget {
     uid = user.uid;
     if (user == null) {
       print('fail to login');
+      return;
     }
 
     _dbCommit.UpdateUser(user.uid, UserStatus(online: true, timestamp: DateTime.now().toString()));
