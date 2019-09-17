@@ -47,29 +47,28 @@ class MatchPeopleButton extends StatelessWidget {
                         _roomSubscription = null;
                       }
                       String path = 'room_' + userStore.partyPeople.toString();
-                      _firebase_realtime
-                          .GetUserStream(
-                              "chat/" + path,
-                              (Event event) => {
-                                    print('chat Firebase status : ' +
-                                        event.snapshot.value.toString()),
-                                    if (event.snapshot.value[LoginComponent.uid]
-                                            ['room_addr'] !=
-                                        null)
-                                      {
-                                        print('move to room!'),
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ChatRoom()))
-                                      }
-                                  })
-                          .then(
-                              (StreamSubscription s) => _roomSubscription = s);
+                      _firebase_realtime.GetUserStream(
+                          "chat/" + path,
+                          (Event event) => {
+                                print('chat Firebase status : ' +
+                                    event.snapshot.value.toString()),
+                                if (event.snapshot.value[LoginComponent.uid]
+                                        ['room_addr'] !=
+                                    null)
+                                  {
+                                    print('move to room! clear all asset'),
+                                    _roomSubscription.cancel(),
+                                    _roomSubscription = null,
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatRoom()))
+                                  }
+                              }).then(
+                          (StreamSubscription s) => _roomSubscription = s);
 
-                      _firebase_realtime
-                          .RegisterChatQueue(LoginComponent.uid, path)
+                      _firebase_realtime.RegisterChatQueue(
+                              LoginComponent.uid, path)
                           .catchError((error) => print(error));
                     })),
     );
