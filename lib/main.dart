@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_together/Components/LoginComponent.dart';
+import 'package:netflix_together/Data/User.dart';
 import 'package:netflix_together/FirebaseAPI/DataManipulator.dart';
 import 'package:netflix_together/Page/Roomsearcher.dart';
 import 'package:provider/provider.dart';

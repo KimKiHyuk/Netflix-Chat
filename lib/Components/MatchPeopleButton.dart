@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_together/Components/LoadingAnimation.dart';
 import 'package:netflix_together/FirebaseAPI/FirebaseWrapper.dart';
+import 'package:netflix_together/Page/ChatRoom.dart';
 import 'package:netflix_together/Store/UserStore.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ import 'LoginComponent.dart';
 
 class MatchPeopleButton extends StatelessWidget {
   StreamSubscription _roomSubscription;
+  FirebaseWrapper _firebase_realtime = FirebaseWrapper();
 
   @override
   Widget build(BuildContext context) {
@@ -39,26 +41,37 @@ class MatchPeopleButton extends StatelessWidget {
                   : () {
                       if (_roomSubscription != null) {
                         // for building stream again
-                        print('room subscription does already exist. try subscription cancelation');
+                        print(
+                            '[1] room subscription does already exist. try subscription cancelation');
                         _roomSubscription.cancel();
+                        _roomSubscription = null;
                       }
                       String path = 'room_' + userStore.partyPeople.toString();
-                      FirebaseWrapper()
+                      _firebase_realtime
                           .GetUserStream(
                               "chat/" + path,
                               (Event event) => {
                                     print('chat Firebase status : ' +
                                         event.snapshot.value.toString()),
-                                    if (event.snapshot.value[LoginComponent.uid]['selectedByServer'] == true)
-                                      {print('ready to enter chatroom')}
+                                    if (event.snapshot.value[LoginComponent.uid]
+                                            ['room_addr'] !=
+                                        null)
+                                      {
+                                        print('move to room!'),
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ChatRoom()))
+                                      }
                                   })
                           .then(
                               (StreamSubscription s) => _roomSubscription = s);
 
-                      FirebaseWrapper().RegisterChatQueue(LoginComponent.uid, path).catchError((error) => print(error));
+                      _firebase_realtime
+                          .RegisterChatQueue(LoginComponent.uid, path)
+                          .catchError((error) => print(error));
                     })),
     );
   }
-
-
 }

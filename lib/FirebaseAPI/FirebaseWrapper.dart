@@ -19,9 +19,16 @@ class FirebaseWrapper {
 
   Future<void> RegisterChatQueue(String uid, String path) async {
     FirebaseDatabase.instance.reference().child('chat').child(path).child(uid).set({
-      'selectedByServer' : false,
+      'room_addr' : null,
       'timestamp': DateTime.now().toString(), // should be server time, Todo : Firebase.servervalue.time
     });
   }
 
+  Future<void> UnRegisterChatQueue(String uid, String path) async {
+    FirebaseDatabase.instance.reference().child('chat').child(path)
+        .child(uid)
+        .remove().then((_) {
+          print('[new] delete chat/$path/$uid success');
+    });
+  }
 }
