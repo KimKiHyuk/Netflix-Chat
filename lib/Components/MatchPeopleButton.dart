@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_together/Components/LoadingAnimation.dart';
@@ -53,7 +54,7 @@ class MatchPeopleButton extends StatelessWidget {
                                 print('chat Firebase status : ' +
                                     event.snapshot.value.toString()),
                                 if (event.snapshot.value[LoginComponent.uid]
-                                        ['room_addr'] !=
+                                        ['addr'] !=
                                     null)
                                   {
                                     print('move to room! clear all asset'),

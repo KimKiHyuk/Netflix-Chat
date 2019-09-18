@@ -19,7 +19,7 @@ class FirebaseWrapper {
 
   Future<void> RegisterChatQueue(String uid, String path) async {
     FirebaseDatabase.instance.reference().child('chat').child(path).child(uid).set({
-      'room_addr' : null,
+      'addr' : null,
       'timestamp': DateTime.now().toString(), // should be server time, Todo : Firebase.servervalue.time
     });
   }
@@ -31,4 +31,5 @@ class FirebaseWrapper {
           print('[new] delete chat/$path/$uid success');
     });
   }
+
 }
