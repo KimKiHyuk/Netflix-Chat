@@ -18,7 +18,7 @@ class FirebaseWrapper {
   }
 
   Future<void> RegisterChatQueue(String uid, String path) async {
-    FirebaseDatabase.instance.reference().child('chat').child(path).child(uid).set({
+    FirebaseDatabase.instance.reference().child(path).child(uid).set({
       'addr' : null,
       'timestamp': DateTime.now().toString(), // should be server time, Todo : Firebase.servervalue.time
     });

@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:netflix_together/Components/LoadingAnimation.dart';
 import 'package:netflix_together/FirebaseAPI/FirebaseWrapper.dart';
 import 'package:netflix_together/Page/ChatRoom.dart';
+import 'package:netflix_together/Services/AccountService.dart';
 import 'package:netflix_together/Store/UserStore.dart';
 import 'package:provider/provider.dart';
 
@@ -13,12 +15,12 @@ import 'LoginComponent.dart';
 
 class MatchPeopleButton extends StatelessWidget {
   StreamSubscription _roomSubscription;
-  FirebaseWrapper _firebase_realtime = FirebaseWrapper();
+  FirebaseWrapper _firebaseRealtime = FirebaseWrapper();
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
+    final account = Injector.getInjector().get<AccountService>().user;
     return Container(
       child: Consumer<UserStore>(
           builder: (context, userStore, child) => RaisedButton(
@@ -47,13 +49,13 @@ class MatchPeopleButton extends StatelessWidget {
                         _roomSubscription.cancel();
                         _roomSubscription = null;
                       }
-                      String path = 'room_' + userStore.partyPeople.toString();
-                      _firebase_realtime.GetUserStream(
-                          "chat/" + path,
+                      String path = 'chat/room_' + userStore.partyPeople.toString();
+                      _firebaseRealtime.GetUserStream(
+                          path,
                           (Event event) => {
                                 print('chat Firebase status : ' +
                                     event.snapshot.value.toString()),
-                                if (event.snapshot.value[LoginComponent.uid]
+                                if (event.snapshot.value[account.uid]
                                         ['addr'] !=
                                     null)
                                   {
@@ -63,14 +65,14 @@ class MatchPeopleButton extends StatelessWidget {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => ChatRoom(path + '/' + event.snapshot.value[LoginComponent.uid]
-                                            ['addr'], LoginComponent.static_user)))
+                                            builder: (context) => ChatRoom(path + '/' + event.snapshot.value[account.uid]
+                                            ['addr'])))
                                   }
                               }).then(
                           (StreamSubscription s) => _roomSubscription = s);
 
-                      _firebase_realtime.RegisterChatQueue(
-                              LoginComponent.uid, path)
+                      _firebaseRealtime.RegisterChatQueue(
+                              account.uid, path)
                           .catchError((error) => print(error));
                     })),
     );

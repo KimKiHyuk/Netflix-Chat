@@ -10,25 +10,21 @@ import 'package:netflix_together/validator/validator.dart';
 import 'package:provider/provider.dart';
 
 class LoginComponent extends StatelessWidget {
-  // move to uill.dart
-  static String uid = null; // for legacy
-  static String email = null; // too
 
-  static FirebaseUser static_user = null;
   final GlobalKey<FormState> _formKey =
-  GlobalKey<FormState>(); // TODO : Dependency injecton
+      GlobalKey<FormState>(); // TODO : Dependency injecton
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final Validator validator = Validator(); // TODO : dependency injection
   final DataManipulator _dbCommit =
-  DataManipulator(); // TODO : dependecy injectionm
+      DataManipulator(); // TODO : dependecy injectionm
 
   Future<String> _Registeration(BuildContext context) async {
     try {
       final AuthResult result = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-          email: _emailController.value.text,
-          password: _passwordController.value.text);
+              email: _emailController.value.text,
+              password: _passwordController.value.text);
       FirebaseUser user = result.user;
 
       if (user == null) {
@@ -48,11 +44,11 @@ class LoginComponent extends StatelessWidget {
     try {
       final AuthResult result = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-          email: _emailController.value.text,
-          password: _passwordController.value.text);
+              email: _emailController.value.text,
+              password: _passwordController.value.text);
 
       FirebaseUser user = result.user;
-      uid = user.uid;
+
       if (user == null) {
         return '로그인 과정에서 오류가 발생하였습니다. 다시 시도해주세요';
       }
@@ -68,18 +64,15 @@ class LoginComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double size = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double size = MediaQuery.of(context).size.width;
     return Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
         elevation: 6,
         child: Padding(
-            padding:
-            EdgeInsets.only(bottom: 10.0, left: 12.0, right: 12.0, top: 12.0),
+            padding: EdgeInsets.only(
+                bottom: 10.0, left: 12.0, right: 12.0, top: 12.0),
             child: Form(
                 key: _formKey,
                 child: Column(
@@ -103,9 +96,9 @@ class LoginComponent extends StatelessWidget {
                           child: Consumer<LoginStore>(
                               builder: (context, loginStore, child) =>
                                   RaisedButton(
-                                      color:
-                                      loginStore.isJoin ? Colors.blue : Colors
-                                          .red,
+                                      color: loginStore.isJoin
+                                          ? Colors.blue
+                                          : Colors.red,
                                       child: SizedBox(
                                         width: size * 0.5,
                                         child: Text(
@@ -114,14 +107,14 @@ class LoginComponent extends StatelessWidget {
                                         ),
                                       ),
                                       shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              20)),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
                                       onPressed: () async {
                                         if (_formKey.currentState.validate()) {
                                           print("1515 pressed");
                                           var snackMessage = loginStore.isJoin
-                                          ? await _Registeration(context)
-                                          : await _Login(context);
+                                              ? await _Registeration(context)
+                                              : await _Login(context);
 
                                           final SnackBar snackBar = SnackBar(
                                             content: Text(snackMessage),
@@ -132,11 +125,10 @@ class LoginComponent extends StatelessWidget {
                                               },
                                             ),
                                           );
-                                          Scaffold.of(context).showSnackBar(
-                                              snackBar);
+                                          Scaffold.of(context)
+                                              .showSnackBar(snackBar);
                                         }
-                                      }
-                                  )))
+                                      })))
                     ]))));
   }
 }
