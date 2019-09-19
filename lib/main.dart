@@ -11,9 +11,24 @@ import 'package:netflix_together/Store/LoginStore.dart';
 import 'package:provider/provider.dart';
 
 import 'Components/CurrentAppUserCounter.dart';
+import 'Services/AccountService.dart';
 import 'Store/UserStore.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  final injector = ModuleContainer().initialise(Injector.getInjector());
+
+  //injector.get<SomeOtherType>(additionalParameters: {"id": "some-id"}); // prints 'some-id'
+  runApp(MyApp());
+}
+
+class ModuleContainer {
+  Injector initialise(Injector injector) {
+    injector.map<AccountService>((i) => AccountService(), isSingleton: true);
+
+    return injector;
+  }
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -28,26 +43,16 @@ class MyApp extends StatelessWidget {
 
 class ApplicationEntry extends StatelessWidget {
   Widget build(BuildContext context) {
-    return StreamBuilder<FirebaseUser>(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
-      builder: (context, snapshot) {
-        if (snapshot.data ==
-            null) { // TODO : change single proviers as multiple provider
-          return ChangeNotifierProvider<LoginStore>.value(
-              value: LoginStore(), child: AuthPage());
-        } else {
-          FirebaseAuth.instance.currentUser().then((user) =>
-          {
-            LoginComponent.uid = user.uid, // for legacy, TODO : get rid of it and fetching data from DI
-            LoginComponent.email = user.email,
-            LoginComponent.static_user = user,
-          });
-              return ChangeNotifierProvider<UserStore>.value(
-              value: UserStore(), child: RoomSearcher(email: snapshot.data.email
-        )
-        );
-      }
-      },
-    );
+    if (Injector
+        .getInjector()
+        .get<AccountService>()
+        .user == null) { // TODO : change single proviers as multiple provider
+      return ChangeNotifierProvider<LoginStore>.value(
+          value: LoginStore(), child: AuthPage());
+    }
+    else {
+      return ChangeNotifierProvider<UserStore>.value(
+          value: UserStore(), child: RoomSearcher());
+    }
   }
 }
