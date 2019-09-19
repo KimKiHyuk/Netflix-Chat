@@ -5,8 +5,5 @@ class AccountService {
 
   AccountService() {
     print('init serv');
-    FirebaseAuth.instance.onAuthStateChanged.listen((event) => {
-          user = event,
-        });
   }
 }

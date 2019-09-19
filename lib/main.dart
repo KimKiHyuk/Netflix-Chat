@@ -35,24 +35,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-          body: ApplicationEntry(),
-        ));
+      body: ApplicationEntry(),
+    ));
   }
 }
 
-
 class ApplicationEntry extends StatelessWidget {
   Widget build(BuildContext context) {
-    if (Injector
-        .getInjector()
-        .get<AccountService>()
-        .user == null) { // TODO : change single proviers as multiple provider
-      return ChangeNotifierProvider<LoginStore>.value(
-          value: LoginStore(), child: AuthPage());
-    }
-    else {
-      return ChangeNotifierProvider<UserStore>.value(
-          value: UserStore(), child: RoomSearcher());
-    }
+    return StreamBuilder<FirebaseUser>(
+        stream: FirebaseAuth.instance.onAuthStateChanged,
+        builder: (context, snapshot) {
+          Injector.getInjector().get<AccountService>().user = snapshot.data;
+          if (snapshot.data == null) {
+            // TODO : change single proviers as multiple provider
+            return ChangeNotifierProvider<LoginStore>.value(
+                value: LoginStore(), child: AuthPage());
+          } else {
+
+            return ChangeNotifierProvider<UserStore>.value(
+                value: UserStore(), child: RoomSearcher());
+          }
+        });
   }
 }

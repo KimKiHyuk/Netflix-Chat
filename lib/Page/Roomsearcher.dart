@@ -6,22 +6,26 @@ import 'package:netflix_together/Components/MatchPeopleButton.dart';
 import 'package:netflix_together/Components/PeopleSelectorComponents.dart';
 
 class RoomSearcher extends StatelessWidget {
-  RoomSearcher( {this.email} );
+  RoomSearcher({this.email});
+
   final String email;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
           CurrentAppUserCounter(),
           PeopleSelectorComponents(),
-          MatchPeopleButton(), // TODO: when animation is activating, stop animation button is clicked again
-          // LoadingAnimation(),
-        ],
-      )
-    );
+          MatchPeopleButton(),
+          // TODO: when animation is activating, stop animation button is clicked again
+          RaisedButton(
+              child: Text('logout'),
+              onPressed: () async {
+                FirebaseAuth.instance.signOut();
+              })
+        ]));
   }
 }
