@@ -18,7 +18,7 @@ class PeopleSelector extends State<PeopleSelectorComponents> {
   //              child:
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return SafeArea(child: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -48,6 +48,6 @@ class PeopleSelector extends State<PeopleSelectorComponents> {
                     ))),
         Text('명으로 넷플릭스 즐기기'),
       ],
-    );
+    ));
   }
 }

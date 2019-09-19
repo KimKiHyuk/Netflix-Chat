@@ -31,14 +31,22 @@ class ApplicationEntry extends StatelessWidget {
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (context, snapshot) {
-        if (snapshot.data == null) {   // TODO : change single proviers as multiple provider
+        if (snapshot.data ==
+            null) { // TODO : change single proviers as multiple provider
           return ChangeNotifierProvider<LoginStore>.value(
               value: LoginStore(), child: AuthPage());
         } else {
-          FirebaseAuth.instance.currentUser().then((user) => LoginComponent.uid = user.uid);
-          return ChangeNotifierProvider<UserStore>.value(
-              value: UserStore(), child: RoomSearcher(email: snapshot.data.email));
-        }
+          FirebaseAuth.instance.currentUser().then((user) =>
+          {
+            LoginComponent.uid = user.uid, // for legacy, TODO : get rid of it and fetching data from DI
+            LoginComponent.email = user.email,
+            LoginComponent.static_user = user,
+          });
+              return ChangeNotifierProvider<UserStore>.value(
+              value: UserStore(), child: RoomSearcher(email: snapshot.data.email
+        )
+        );
+      }
       },
     );
   }

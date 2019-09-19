@@ -10,8 +10,10 @@ import 'package:provider/provider.dart';
 
 class LoginComponent extends StatelessWidget {
   // move to uill.dart
-  static String uid = null;
-  //
+  static String uid = null; // for legacy
+  static String email = null; // too
+
+  static FirebaseUser static_user = null;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO : Dependency injecton
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -23,6 +25,7 @@ class LoginComponent extends StatelessWidget {
 
     FirebaseUser user = result.user;
     uid = user.uid;
+    static_user = user;
 
     if (user == null) {
       print('faild to registeration');

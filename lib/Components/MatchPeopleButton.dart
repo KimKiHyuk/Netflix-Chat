@@ -63,7 +63,8 @@ class MatchPeopleButton extends StatelessWidget {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => ChatRoom()))
+                                            builder: (context) => ChatRoom(path + '/' + event.snapshot.value[LoginComponent.uid]
+                                            ['addr'], LoginComponent.static_user)))
                                   }
                               }).then(
                           (StreamSubscription s) => _roomSubscription = s);
