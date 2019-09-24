@@ -1,38 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:netflix_together/Components/LoginComponent.dart';
+import 'package:netflix_together/Services/AccountService.dart';
 import 'package:netflix_together/Store/UserStore.dart';
 import 'package:provider/provider.dart';
 
 class ChatRoom extends StatefulWidget {
   static const String id = "CHAT";
   String path;
-  final FirebaseUser user;
 
-
-  ChatRoom(this.path, this.user) {}
+  ChatRoom(this.path) {}
 
   @override
   _ChatState createState() => _ChatState(path);
 }
 
 class _ChatState extends State<ChatRoom> {
+  final user = Injector.getInjector().get<AccountService>().user;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   String path;
 
-  _ChatState(String this.path) {}
+  _ChatState(this.path) {}
 
   TextEditingController messageController = TextEditingController();
   ScrollController scrollController = ScrollController();
 
   Future<void> chatSendingCallback() async {
     if (messageController.text.length > 0) {
-      print('path : ' + path);
-      await _firestore.collection('chat/' + path).add({
+      await _firestore.collection(path).add({
         'text': messageController.text,
-        'email': LoginComponent.email,
+        'email': user.email,
         'date': DateTime.now().toIso8601String().toString(),
       });
       messageController.clear();
@@ -64,7 +64,7 @@ class _ChatState extends State<ChatRoom> {
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: _firestore
-                    .collection('chat/' + path) // TODO: refactor
+                    .collection(path) // TODO: refactor
                     .orderBy('date')
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -79,7 +79,7 @@ class _ChatState extends State<ChatRoom> {
                       .map((doc) => Message(
                     email: doc.data['email'],
                     text: doc.data['text'],
-                    me: widget.user.email == doc.data['email'],
+                    me: user.email == doc.data['email'],
                   ))
                       .toList();
 

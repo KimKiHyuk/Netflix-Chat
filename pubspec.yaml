@@ -28,6 +28,7 @@ dependencies:
   cloud_firestore: ^0.12.9+4
   firebase_database: ^3.0.7
   firebase_messaging: ^5.1.6
+  flutter_simple_dependency_injection: any
 
 dev_dependencies:
   flutter_test:

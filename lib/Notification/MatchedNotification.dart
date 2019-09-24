@@ -20,7 +20,7 @@ class MatchingNotification {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ChatRoom()));
+                builder: (context) => ChatRoom(message['addr'])));
       },
     );
   }
