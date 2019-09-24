@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:netflix_together/Components/LoginComponent.dart';
 import 'package:netflix_together/Data/User.dart';
@@ -22,11 +23,11 @@ class FirebaseWrapper {
   }
 
   Future<void> RegisterChatQueue(String uid, String path) async {
-    var user = Injector.getInjector().get<AccountService>().user;
-    var tokenData  = await user.getIdToken();
+    var message = Injector.getInjector().get<AccountService>().messaging;
+    var tokenData  = await message.getToken();
     FirebaseDatabase.instance.reference().child(path).child(uid).set({
       'addr' : null,
-      'token' : tokenData.token,
+      'token' : tokenData,
       'timestamp': DateTime.now().toString(), // should be server time, Todo : Firebase.servervalue.time
     });
   }
