@@ -32,54 +32,51 @@ class MatchPeopleButton extends StatelessWidget {
     final account = Injector.getInjector().get<AccountService>().user;
     return Container(
       child: Consumer<UserStore>(
-          builder: (context, userStore, child) => RaisedButton(
-              child: SizedBox(
-                  width: size.width * 0.4,
-                  height: size.height * 0.2,
-                  child: Center(
-                    child: Icon(Icons.play_arrow,
-                    size: 30,)
-                    ),
-                  ),
-              shape: CircleBorder(),
-              elevation: 10,
-              color: Colors.amberAccent,
-              onPressed: () async {
-                      String path =
-                          'chat/room_' + userStore.partyPeople.toString();
-                      connectionClear();
-                      _firebaseRealtime.GetUserStream(
-                          path,
-                          (Event event) => {
-                                if (event.snapshot.value[account.uid]
-                                        ['addr'] !=
-                                    null)
-                                  {
-                                    connectionClear(),
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ChatRoom(
-                                                path +
-                                                    '/' +
-                                                    event.snapshot
-                                                            .value[account.uid]
-                                                        ['addr'])))
-                                  }
-                              }).then(
-                          (StreamSubscription s) => _roomSubscription = s);
+        builder: (context, userStore, child) => RaisedButton(
+            child: SizedBox(
+              width: size.width * 0.4,
+              height: size.height * 0.2,
+              child: Center(
+                  child: Icon(
+                Icons.play_arrow,
+                size: 30,
+              )),
+            ),
+            shape: CircleBorder(),
+            elevation: 10,
+            color: Colors.amberAccent,
+            onPressed: () async {
+              Navigator.of(context).push(ModalAnimation()); // animation start
+              String path = 'chat/room_' + userStore.partyPeople.toString();
+              connectionClear();
+              _firebaseRealtime.GetUserStream(
+                  path,
+                  (Event event) => {
+                        if (event.snapshot.value[account.uid]['addr'] != null)
+                          {
+                            Navigator.pop(context), // to dispose modal
+                            connectionClear(),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatRoom(path +
+                                        '/' +
+                                        event.snapshot.value[account.uid]
+                                            ['addr'])))
+                          }
+                      }).then((StreamSubscription s) => _roomSubscription = s);
 
-                      await _disconnectionSchedule?.cancel();
+              await _disconnectionSchedule?.cancel();
 
-                      _disconnectionSchedule = FirebaseDatabase.instance
-                          .reference()
-                          .child(path + '/' + account.uid)
-                          .onDisconnect();
-                      _disconnectionSchedule.remove();
+              _disconnectionSchedule = FirebaseDatabase.instance
+                  .reference()
+                  .child(path + '/' + account.uid)
+                  .onDisconnect();
+              _disconnectionSchedule.remove();
 
-                      _firebaseRealtime.RegisterChatQueue(
-                          path + '/' + account.uid);
-                    })),
+              _firebaseRealtime.RegisterChatQueue(path + '/' + account.uid);
+            }),
+      ),
     );
   }
 

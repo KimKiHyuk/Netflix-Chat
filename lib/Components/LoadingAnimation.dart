@@ -1,62 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class LoadingAnimation extends StatefulWidget {
-  _AnimationState createState() => _AnimationState();
-}
-
-
-class _Animation extends AnimatedWidget {
-
-  _Animation({Key key, Animation<double> animation}) : super(key: key, listenable: animation);
+class ModalAnimation extends ModalRoute<void> {
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 500);
 
   @override
-  Widget build(BuildContext context) {
-    final Animation<double> animation = listenable as Animation<double>;
-    return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        height: animation.value,
-        width: animation.value,
-        child: FlutterLogo(),
+  bool get opaque => false;
+
+  @override
+  bool get barrierDismissible => false;
+
+  @override
+  Color get barrierColor => Colors.black.withOpacity(0.5);
+
+  @override
+  String get barrierLabel => null;
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    // This makes sure that text and other content follows the material style
+    return Material(
+      type: MaterialType.transparency,
+      // make sure that the overlay content is not cut off
+      child: SafeArea(
+        child: _buildOverlayContent(context),
       ),
     );
   }
-}
 
-
-// #docregion print-state
-class _AnimationState extends State<LoadingAnimation> with SingleTickerProviderStateMixin {
-  Animation<double> animation;
-  AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller =
-        AnimationController(duration: const Duration(seconds: 2), vsync: this);
-    animation = Tween<double>(begin: 0, end: 300).animate(controller)
-    // #enddocregion print-state
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          controller.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          controller.forward();
-        }
-      })
-    // #docregion print-state
-      ..addStatusListener((state) => print('$state'));
-      controller.forward();
+  Widget _buildOverlayContent(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            '넷플릭스 계정을 공유할 사람을 구하고있습니다.\n앱을 백그라운드로 하고 다른 작업을 하셔도 됩니다.',
+            style: TextStyle(color: Colors.white, fontSize: 15.0),
+          ),
+          SpinKitRotatingPlain(
+          color: Colors.white,
+          size: 50.0,
+        ),
+          RaisedButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Dismiss'),
+          )
+        ],
+      ),
+    );
   }
-  // #enddocregion print-state
 
   @override
-  Widget build(BuildContext context) => _Animation(animation: animation);
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    // You can add your own animations for the overlay content
+    return FadeTransition(
+      opacity: animation,
+      child: ScaleTransition(
+        scale: animation,
+        child: child,
+      ),
+    );
+  }
 
   @override
   void dispose() {
-    controller.dispose();
+    print('animation dispose');
     super.dispose();
   }
-// #docregion print-state
 }
+
