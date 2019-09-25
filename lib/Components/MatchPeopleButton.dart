@@ -16,8 +16,15 @@ import 'LoginComponent.dart';
 
 class MatchPeopleButton extends StatelessWidget {
   StreamSubscription _roomSubscription;
-  FirebaseWrapper _firebaseRealtime = FirebaseWrapper();
-  OnDisconnect _disconnectionSchedule = null;
+  FirebaseWrapper _firebaseRealtime;
+  OnDisconnect _disconnectionSchedule;
+
+  void Initalize() {
+    print('compoents initalize');
+    _roomSubscription = null;
+    _firebaseRealtime = FirebaseWrapper();
+    _disconnectionSchedule = null;
+  }
 
   @override
   Widget build(BuildContext context) {

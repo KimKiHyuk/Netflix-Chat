@@ -10,18 +10,11 @@ class MatchingNotification {
   MatchingNotification(BuildContext context) {
     _firebaseMessaging.configure(
       onLaunch: (Map<String, dynamic> message) async {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RoomSearcher()));
+        // TODO : when triggered app launched
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ChatRoom(message['addr'])));
-      },
+      }
     );
   }
 }

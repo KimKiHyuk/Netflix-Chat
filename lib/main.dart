@@ -13,6 +13,7 @@ import 'package:netflix_together/Store/LoginStore.dart';
 import 'package:provider/provider.dart';
 
 import 'Components/CurrentAppUserCounter.dart';
+import 'Components/MatchPeopleButton.dart';
 import 'Services/AccountService.dart';
 import 'Store/UserStore.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
@@ -20,12 +21,14 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 void main() {
   final injector = ModuleContainer().initialise(Injector.getInjector());
   //injector.get<SomeOtherType>(additionalParameters: {"id": "some-id"}); // prints 'some-id'
+  injector.get<MatchPeopleButton>().Initalize();
   runApp(MyApp());
 }
 
 class ModuleContainer {
   Injector initialise(Injector injector) {
     injector.map<AccountService>((i) => AccountService(), isSingleton: true);
+    injector.map<MatchPeopleButton>((i) => MatchPeopleButton(), isSingleton: true);
 
     return injector;
   }
