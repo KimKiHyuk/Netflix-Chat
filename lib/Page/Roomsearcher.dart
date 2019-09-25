@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:netflix_together/Components/ArrowToUnderComponents.dart';
 import 'package:netflix_together/Components/CurrentAppUserCounter.dart';
 import 'package:netflix_together/Components/LoadingAnimation.dart';
 import 'package:netflix_together/Components/MatchPeopleButton.dart';
@@ -21,18 +22,24 @@ class RoomSearcher extends StatelessWidget {
     var _matchButton = MatchPeopleButton();
     return Center(
         child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-          PeopleSelectorComponents(),
+              Row(children: <Widget>[
+                IconButton(icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                  _matchButton.connectionClear();
+                  FirebaseAuth.instance.signOut();
+                },),
+              ],),
+          Center(child: Column(
+            children: <Widget>[
+              PeopleSelectorComponents(),
+              ArrowUnderComponents(),
               _matchButton,
+            ],
+          ),)
           // TODO: when animation is activating, stop animation button is clicked again
-          RaisedButton(
-              child: Text('logout'),
-              onPressed: () async {
-                _matchButton.connectionClear();
-                FirebaseAuth.instance.signOut();
-              })
         ]));
   }
 }

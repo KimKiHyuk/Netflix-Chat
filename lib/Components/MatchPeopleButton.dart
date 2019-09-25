@@ -34,23 +34,17 @@ class MatchPeopleButton extends StatelessWidget {
       child: Consumer<UserStore>(
           builder: (context, userStore, child) => RaisedButton(
               child: SizedBox(
-                  width: size.width * 0.5,
-                  height: size.height * 0.25,
+                  width: size.width * 0.4,
+                  height: size.height * 0.2,
                   child: Center(
-                    child: Text(
-                      userStore.partyPeople == -1
-                          ? '파티원 수를 선택해주세요'
-                          : userStore.partyPeople.toString() + '명 매칭',
-                      textAlign: TextAlign.center,
+                    child: Icon(Icons.play_arrow,
+                    size: 30,)
                     ),
-                  )),
-              elevation: 5,
-              color: Colors.redAccent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              onPressed: userStore.partyPeople == -1
-                  ? null
-                  : () async {
+                  ),
+              shape: CircleBorder(),
+              elevation: 10,
+              color: Colors.amberAccent,
+              onPressed: () async {
                       String path =
                           'chat/room_' + userStore.partyPeople.toString();
                       connectionClear();
