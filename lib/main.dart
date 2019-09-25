@@ -90,7 +90,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      body: ApplicationEntry(),
+      body: SafeArea(child:  ApplicationEntry(),),
+          backgroundColor: Color.fromRGBO(56, 182, 255, 1),
     ));
   }
 }

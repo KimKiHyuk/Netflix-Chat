@@ -5,7 +5,7 @@ class Validator {
   }
 
   Function(String) stringValadator = (String value) {
-    return value.isEmpty ? 'Please input data' : null;
+    return value.isEmpty ? '빈칸을 채워주세요' : null;
   };
 
 
