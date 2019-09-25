@@ -26,7 +26,9 @@ class FirebaseWrapper {
         .child(key)
         .onValue
         .listen((Event event) {
-      processData(event);
+      try {
+        processData(event);
+      } on Error catch (e) {}
     });
 
     return subscription;
@@ -52,6 +54,4 @@ class FirebaseWrapper {
 
     _registeredRoom?.clear();
   }
-
-
 }

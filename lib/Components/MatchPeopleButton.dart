@@ -57,11 +57,7 @@ class MatchPeopleButton extends StatelessWidget {
                       _firebaseRealtime.GetUserStream(
                           path,
                           (Event event) => {
-                                if (event == null || event.snapshot.value == null)
-                                  {
-                                    print('event is null, do nothing'),
-                                  }
-                                else if (event.snapshot.value[account.uid]
+                                if (event.snapshot.value[account.uid]
                                         ['addr'] !=
                                     null)
                                   {
