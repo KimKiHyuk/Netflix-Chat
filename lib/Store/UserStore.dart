@@ -2,9 +2,17 @@ import 'package:flutter/foundation.dart';
 
 
 class UserStore extends ChangeNotifier {
-  int _onlineUser = 0;
-  int _partyPeople = -1;
-  String _email = null;
+  int _onlineUser;
+  int _partyPeople;
+  String _email;
+
+  void Initalize() {
+    _onlineUser = 0;
+    _partyPeople = -1;
+    _email = null;
+
+    print('UserStore initalize done');
+  }
 
   int get OnlineUserCount => _onlineUser;
   int get partyPeople => _partyPeople;

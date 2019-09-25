@@ -12,7 +12,6 @@ import 'package:netflix_together/Services/AccountService.dart';
 
 class FirebaseWrapper {
   Queue<String> _registeredRoom;
-  HashMap<int, String> _disconnectionMap;
 
   FirebaseWrapper() {
     _registeredRoom = Queue<String>();
@@ -43,7 +42,7 @@ class FirebaseWrapper {
       // should be server time, Todo : Firebase.servervalue.time
     });
 
-    _registeredRoom.addLast(path);
+    _registeredRoom?.addLast(path);
   }
 
   Future<void> unRegisterChatQueue() async {
@@ -51,6 +50,8 @@ class FirebaseWrapper {
           FirebaseDatabase.instance.reference().child(path).remove(),
         });
 
-    _registeredRoom.clear();
+    _registeredRoom?.clear();
   }
+
+
 }

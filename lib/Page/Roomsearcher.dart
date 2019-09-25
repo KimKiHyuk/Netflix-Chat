@@ -8,23 +8,29 @@ import 'package:netflix_together/Components/PeopleSelectorComponents.dart';
 
 class RoomSearcher extends StatelessWidget {
   RoomSearcher({this.email});
+
   final injector = Injector.getInjector();
   final String email;
 
+  void Initalize() {
+    print('RoomSearcherPage initalize done');
+  }
+
   @override
   Widget build(BuildContext context) {
+    var _matchButton = MatchPeopleButton();
     return Center(
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
           PeopleSelectorComponents(),
-          injector.get<MatchPeopleButton>(),
+              _matchButton,
           // TODO: when animation is activating, stop animation button is clicked again
           RaisedButton(
               child: Text('logout'),
               onPressed: () async {
-                injector.get<MatchPeopleButton>().connectionClear();
+                _matchButton.connectionClear();
                 FirebaseAuth.instance.signOut();
               })
         ]));

@@ -19,7 +19,7 @@ class MatchPeopleButton extends StatelessWidget {
   FirebaseWrapper _firebaseRealtime;
   OnDisconnect _disconnectionSchedule;
 
-  void Initalize() {
+  MatchPeopleButton() {
     print('compoents initalize');
     _roomSubscription = null;
     _firebaseRealtime = FirebaseWrapper();
@@ -50,14 +50,19 @@ class MatchPeopleButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20)),
               onPressed: userStore.partyPeople == -1
                   ? null
-                  : () {
+                  : () async {
                       String path =
                           'chat/room_' + userStore.partyPeople.toString();
                       connectionClear();
                       _firebaseRealtime.GetUserStream(
                           path,
                           (Event event) => {
-                                if (event.snapshot.value[account.uid]['addr'] !=
+                                if (event == null || event.snapshot.value == null)
+                                  {
+                                    print('event is null, do nothing'),
+                                  }
+                                else if (event.snapshot.value[account.uid]
+                                        ['addr'] !=
                                     null)
                                   {
                                     connectionClear(),
@@ -74,7 +79,8 @@ class MatchPeopleButton extends StatelessWidget {
                               }).then(
                           (StreamSubscription s) => _roomSubscription = s);
 
-                      _disconnectionSchedule?.cancel();
+                      await _disconnectionSchedule?.cancel();
+
                       _disconnectionSchedule = FirebaseDatabase.instance
                           .reference()
                           .child(path + '/' + account.uid)
@@ -88,9 +94,13 @@ class MatchPeopleButton extends StatelessWidget {
   }
 
   void connectionClear() {
-    _firebaseRealtime.unRegisterChatQueue();
-    _disconnectionSchedule?.cancel();
-    _roomSubscription?.cancel();
-    _roomSubscription = null;
+    _disconnectionSchedule?.cancel()?.then(
+          (_) => _disconnectionSchedule = null,
+        );
+
+    _roomSubscription?.cancel()?.then((_) => {
+          _roomSubscription = null,
+          _firebaseRealtime.unRegisterChatQueue(),
+        });
   }
 }

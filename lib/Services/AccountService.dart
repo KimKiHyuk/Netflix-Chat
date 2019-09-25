@@ -6,7 +6,12 @@ class AccountService {
   FirebaseMessaging messaging;
 
   AccountService() {
-    print('init serv');
-    messaging = FirebaseMessaging();
+
   }
+
+  void Initalize() {
+    messaging = FirebaseMessaging();
+    print('Account Service initalize done');
+  }
+
 }

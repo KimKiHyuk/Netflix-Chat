@@ -9,9 +9,16 @@ class PeopleSelectorComponents extends StatefulWidget {
 }
 
 class PeopleSelector extends State<PeopleSelectorComponents> {
-  static String _defaultSelectedFlag = '선택안함';
-  List<String> _peopleList = [_defaultSelectedFlag, '2', '3', '4']; // // rubbish coder is here ^.^; enum please..
-  String _dropDownValue = _defaultSelectedFlag;
+  String _defaultSelectedFlag ;
+  List<String> _peopleList; // // rubbish coder is here ^.^; enum please..
+  String _dropDownValue;
+
+  PeopleSelector() {
+    print('init select');
+    _defaultSelectedFlag = '선택안함';
+    _peopleList = [_defaultSelectedFlag, '2', '3', '4'];
+    _dropDownValue = _defaultSelectedFlag;
+  }
 
   //          Consumer<LoginStore>(
   //              builder: (context, loginStore, child) =>

@@ -6,6 +6,12 @@ import 'package:netflix_together/Store/LoginStore.dart';
 import 'package:provider/provider.dart';
 
 class AuthPage extends StatelessWidget {
+
+  void Initalize() {
+    print('AuthPage initalize done');
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
