@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/firebase_database.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:netflix_together/Components/LoadingAnimation.dart';
@@ -16,6 +17,7 @@ import 'LoginComponent.dart';
 class MatchPeopleButton extends StatelessWidget {
   StreamSubscription _roomSubscription;
   FirebaseWrapper _firebaseRealtime = FirebaseWrapper();
+  OnDisconnect _disconnectionSchedule = null;
 
   @override
   Widget build(BuildContext context) {
@@ -42,39 +44,46 @@ class MatchPeopleButton extends StatelessWidget {
               onPressed: userStore.partyPeople == -1
                   ? null
                   : () {
-                      if (_roomSubscription != null) {
-                        // for building stream again
-                        print(
-                            '[1] room subscription does already exist. try subscription cancelation');
-                        _roomSubscription.cancel();
-                        _roomSubscription = null;
-                      }
-                      String path = 'chat/room_' + userStore.partyPeople.toString();
+                      String path =
+                          'chat/room_' + userStore.partyPeople.toString();
+                      connectionClear();
                       _firebaseRealtime.GetUserStream(
                           path,
                           (Event event) => {
-                                print('chat Firebase status : ' +
-                                    event.snapshot.value.toString()),
-                                if (event.snapshot.value[account.uid]
-                                        ['addr'] !=
+                                if (event.snapshot.value[account.uid]['addr'] !=
                                     null)
                                   {
-                                    print('move to room! clear all asset'),
-                                    _roomSubscription.cancel(),
-                                    _roomSubscription = null,
+                                    connectionClear(),
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => ChatRoom(path + '/' + event.snapshot.value[account.uid]
-                                            ['addr'])))
+                                            builder: (context) => ChatRoom(
+                                                path +
+                                                    '/' +
+                                                    event.snapshot
+                                                            .value[account.uid]
+                                                        ['addr'])))
                                   }
                               }).then(
                           (StreamSubscription s) => _roomSubscription = s);
 
+                      _disconnectionSchedule?.cancel();
+                      _disconnectionSchedule = FirebaseDatabase.instance
+                          .reference()
+                          .child(path + '/' + account.uid)
+                          .onDisconnect();
+                      _disconnectionSchedule.remove();
+
                       _firebaseRealtime.RegisterChatQueue(
-                              account.uid, path)
-                          .catchError((error) => print(error));
+                          path + '/' + account.uid);
                     })),
     );
+  }
+
+  void connectionClear() {
+    _firebaseRealtime.unRegisterChatQueue();
+    _disconnectionSchedule?.cancel();
+    _roomSubscription?.cancel();
+    _roomSubscription = null;
   }
 }
