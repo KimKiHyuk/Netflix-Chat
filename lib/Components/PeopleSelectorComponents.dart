@@ -9,34 +9,36 @@ class PeopleSelectorComponents extends StatefulWidget {
 }
 
 class PeopleSelector extends State<PeopleSelectorComponents> {
-  String _defaultSelectedFlag ;
-  List<String> _peopleList; // // rubbish coder is here ^.^; enum please..
+  List<String> _peopleList;
   String _dropDownValue;
 
   PeopleSelector() {
-    print('init select');
-    _defaultSelectedFlag = '선택안함';
-    _peopleList = [_defaultSelectedFlag, '2', '3', '4'];
-    _dropDownValue = _defaultSelectedFlag;
+    _peopleList = ['2명', '3명', '4명'];
+    _dropDownValue = _peopleList[2];
   }
 
-  //          Consumer<LoginStore>(
-  //              builder: (context, loginStore, child) =>
-  //              child:
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Row(
+    final Size size = MediaQuery.of(context).size;
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          '파티원 수 (본인 포함) :   ',
-        ),
         Container(
+            margin: EdgeInsets.only(top: size.height * 0.1),
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.0),
+              color: Colors.black12,
+              border: Border.all(
+                  color: Colors.transparent,
+                  style: BorderStyle.solid,
+                  width: 0.80),
+            ),
             child: Consumer<UserStore>(
                 builder: (context, userStore, child) => DropdownButton<String>(
-                      icon: Icon(Icons.arrow_downward),
-                      style: TextStyle(color: Colors.deepOrange, fontSize: 18),
+                      icon: Icon(Icons.people),
+                      style: TextStyle(color: Colors.black, fontSize: 18),
                       value: _dropDownValue,
                       items: _peopleList
                           .map<DropdownMenuItem<String>>((String value) {
@@ -47,14 +49,14 @@ class PeopleSelector extends State<PeopleSelectorComponents> {
                       }).toList(),
                       onChanged: (String newValue) async {
                         setState(() {
-                          newValue == _defaultSelectedFlag ? userStore.SetPartyPeople(int.parse('-1')) : userStore.SetPartyPeople(int.parse(newValue));
+                          userStore.SetPartyPeople(
+                              int.parse(newValue.substring(0, 1)));
                           _dropDownValue = newValue;
                           print('value is changed ' + _dropDownValue);
                         });
                       },
                     ))),
-        Text('명으로 넷플릭스 즐기기'),
       ],
-    ));
+    );
   }
 }
