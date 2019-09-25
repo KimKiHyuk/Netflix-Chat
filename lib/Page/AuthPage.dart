@@ -36,7 +36,7 @@ class AuthPage extends StatelessWidget {
                   onTap: () {
                     loginStore.LoginJoinSwitch();
                   },
-                  child: Text(loginStore.isJoin ? "If you don't have a account, just click this area to join" : 'If you have a account, just click this area to login'),
+                  child: Text(loginStore.isJoin ? '계정이 있으신가요? 여기를 터치하여 로그인하세요' : '계정이 없으신가요? 여기를 터치하여 계정을 만들어보세요'),
                 ),
             )
           )],
