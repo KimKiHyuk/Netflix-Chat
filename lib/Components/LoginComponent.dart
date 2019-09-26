@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
@@ -14,62 +15,108 @@ class LoginComponent extends StatelessWidget {
   final injector = Injector.getInjector();
   final GlobalKey<FormState> _formKey =
       GlobalKey<FormState>(); // TODO : Dependency injecton
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _smsController = TextEditingController();
+
+  String verificationId;
+  String phoneNumber;
+  String smsCode;
+
   Validator validator;
 
   LoginComponent() {
     validator = injector.get<Validator>();
   }
 
+  Future<String> _login(BuildContext context) async {
+    final PhoneCodeAutoRetrievalTimeout autoRetrive = (String verId) {
+      this.verificationId = verId;
+    };
 
-  Future<String> _registeration(BuildContext context) async {
-    try {
-      final AuthResult result = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailController.value.text,
-              password: _passwordController.value.text);
+    final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
+      this.verificationId = verId;
+      print('verfied id is ' + this.verificationId);
+      smsCodeDialog(context);
+    };
 
-    } on PlatformException catch (error) {
-      print(error.code);
-      switch(error.code) {
-        case 'ERROR_INVALID_EMAIL':
-          return '이메일 양식을 지켜주세요 (yourname@mail.net)';
-        case 'ERROR_WEAK_PASSWORD':
-          return '보안을 위해 비밀번호는 6자리 이상으로 입력해주세요';
-        case 'ERROR_EMAIL_ALREADY_IN_USE':
-          return '이미 등록된 메일입니다. 다른 메일을 입력해주세요';
-        default:
-          return error.message;
-      }
-    }
+    final PhoneVerificationCompleted verifiedSuccess = (AuthCredential user) {
+      print('verrfied ' + user.toString());
+    };
 
-    return '가입에 성공했습니다. 자동으로 로그인합니다.';
+    final PhoneVerificationFailed verifiFailed = (AuthException exception) {
+      print('error code : ' + exception.code);
+    };
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: _phoneController.value.text,
+        codeAutoRetrievalTimeout: autoRetrive,
+        codeSent: smsCodeSent,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verifiedSuccess,
+        verificationFailed: verifiFailed);
+
+    return '인증이 성공적으로 되었습니다';
   }
 
-  Future<String> _login(BuildContext context) async {
+  Future<bool> smsCodeDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+              title: Text('인증번호 입력'),
+              content: TextFormField(
+                controller: _smsController,
+                decoration: InputDecoration(
+                    icon: Icon(Icons.lock), labelText: '인증번호를 입력해주세요'),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              contentPadding: EdgeInsets.all(10.0),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () async {
+                    String _title = '인증 성공';
+                    String _message = '휴대폰 인증에 성공했습니다. 자동으로 로그인합니다.';
+                    String _signResult = await _trySigninWithCredential();
+                    switch (_signResult) {
+                      case '':
+                        Navigator.pop(context);
+                        break;
+                      case 'ERROR_INVALID_VERIFICATION_CODE':
+                        _title = '인증 실패';
+                        _message = '인증 코드가 틀렸습니다.';
+                        break;
+                      default:
+                        _title = '알 수 없는 오류';
+                        _message = '인증과정에서 알 수 없는 오류가 발생했습니다. 다시 시도해주세요.';
+                    }
+                    Flushbar(
+                      title: _title,
+                      message: _message,
+                      duration: Duration(seconds: 3),
+                    )..show(context);
+                    // await signIn();
+                  },
+                  child: Text('확인'),
+                )
+              ]);
+        });
+  }
+
+  Future<String> _trySigninWithCredential() async {
     try {
-      final AuthResult result = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: _emailController.value.text,
-              password: _passwordController.value.text);
+      final AuthCredential credential = PhoneAuthProvider.getCredential(
+          verificationId: verificationId, smsCode: _smsController.value.text);
+
+      var user = await FirebaseAuth.instance.signInWithCredential(credential);
+      print('user is ' + user.toString());
     } on PlatformException catch (error) {
-      print(error.code);
-      switch(error.code) {
-        case 'ERROR_INVALID_EMAIL':
-          return '이메일 양식을 지켜주세요 (yourname@mail.net)';
-        case 'ERROR_WEAK_PASSWORD':
-          return '보안을 위해 비밀번호는 6자리 이상으로 입력해주세요';
-        case 'ERROR_USER_NOT_FOUND':
-          return '해당하는 이메일이 등록되어있지 않습니다. 가입 후 사용해주세요';
-        case 'ERROR_WRONG_PASSWORD':
-          return '비밀번호가 틀렸습니다.';
-        default:
-          return error.message;
-      }
+      print('error code is ' + error.code);
+      return error.code;
     }
 
-    return '로그인에 성공했습니다.';
+    return ''; //return String.empty()
   }
 
   @override
@@ -85,69 +132,34 @@ class LoginComponent extends StatelessWidget {
                 bottom: 10.0, left: 12.0, right: 12.0, top: 12.0),
             child: Form(
                 key: _formKey,
-                child: Consumer<LoginStore>(
-                    builder: (context, loginStore, child) => Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              TextFormField(
-                                controller: _emailController,
-                                decoration: InputDecoration(
-                                    icon: Icon(Icons.email),
-                                    labelText: loginStore.isJoin ? '사용하실 e-mail을 입력해주세요.' : '가입하신 e-mail을 입력해주세요'),
-                                validator: validator.stringValadator,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      TextFormField(
+                        controller: _phoneController,
+                        decoration: InputDecoration(
+                            icon: Icon(Icons.smartphone),
+                            labelText: '휴대폰 번호를 입력해주세요 (01012345678'),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 15.0),
+                          alignment: Alignment(0.0, 0.0),
+                          child: RaisedButton(
+                              color: Colors.cyan,
+                              child: SizedBox(
+                                width: size * 0.5,
+                                child: Text(
+                                  '인증번호 보내기',
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              TextFormField(
-                                  controller: _passwordController,
-
-                                  decoration: InputDecoration(
-                                      icon: Icon(Icons.lock),
-                                      labelText: loginStore.isJoin ? '사용하실 비밀번호를 입력해주세요' : '가입하신 계정의 비밀번호를 입력해주세요'),
-                                  validator: validator.stringValadator),
-                              Container(
-                                  margin: EdgeInsets.only(top: 15.0),
-                                  alignment: Alignment(0.0, 0.0),
-                                  child: Consumer<LoginStore>(
-                                      builder: (context, loginStore, child) =>
-                                          RaisedButton(
-                                              color: loginStore.isJoin
-                                                  ? Colors.cyanAccent
-                                                  : Colors.cyan,
-                                              child: SizedBox(
-                                                width: size * 0.5,
-                                                child: Text(
-                                                  loginStore.isJoin
-                                                      ? '가입하기'
-                                                      : '로그인하기',
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20)),
-                                              onPressed: () async {
-                                                if (_formKey.currentState
-                                                    .validate()) {
-                                                  var snackMessage = loginStore
-                                                          .isJoin
-                                                      ? await _registeration(
-                                                          context)
-                                                      : await _login(context);
-
-                                                  final SnackBar snackBar =
-                                                      SnackBar(
-                                                    content: Text(snackMessage),
-                                                    action: SnackBarAction(
-                                                      label: '닫기',
-                                                      onPressed: () {
-                                                        // Some code to undo the change.
-                                                      },
-                                                    ),
-                                                  );
-                                                  Scaffold.of(context)
-                                                      .showSnackBar(snackBar);
-                                                }
-                                              })))
-                            ])))));
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  await _login(context);
+                                }
+                              }))
+                    ]))));
   }
 }

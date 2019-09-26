@@ -20,7 +20,6 @@ import 'Services/AccountService.dart';
 import 'Store/UserStore.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 
-
 bool bootStrap(Injector injector) {
   try {
     injector.get<AccountService>().Initalize();
@@ -30,9 +29,7 @@ bool bootStrap(Injector injector) {
     injector.get<AuthPage>().Initalize();
     injector.get<Validator>().Initalize();
     injector.get<ChatReadyNotification>().Initalize();
-
-  }
-  on Error catch(e) {
+  } on Error catch (e) {
     print(e);
     return false;
   }
@@ -44,15 +41,13 @@ void main() {
   final injector = ModuleContainer().initialise(Injector.getInjector());
   if (bootStrap(injector)) {
     runApp(MainApp());
-  }
-  else {
+  } else {
     runApp(FailApp());
   }
 }
 
 class ModuleContainer {
   Injector initialise(Injector injector) {
-
     // Service
     injector.map<AccountService>((i) => AccountService(), isSingleton: true);
 
@@ -65,7 +60,8 @@ class ModuleContainer {
     injector.map<AuthPage>((i) => AuthPage(), isSingleton: true);
 
     // Notification
-    injector.map<ChatReadyNotification>((i) => ChatReadyNotification(), isSingleton: true);
+    injector.map<ChatReadyNotification>((i) => ChatReadyNotification(),
+        isSingleton: true);
 
     // Validator
     injector.map<Validator>((i) => Validator(), isSingleton: true);
@@ -75,13 +71,14 @@ class ModuleContainer {
 }
 
 class FailApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-          body: Container(color: Colors.red,),
-        ));
+      body: Container(
+        color: Colors.red,
+      ),
+    ));
   }
 }
 
@@ -90,8 +87,10 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      body: SafeArea(child:  ApplicationEntry(),),
-          backgroundColor: Color.fromRGBO(56, 182, 255, 1),
+      body: SafeArea(
+        child: ApplicationEntry(),
+      ),
+      backgroundColor: Color.fromRGBO(56, 182, 255, 1),
     ));
   }
 }
@@ -107,10 +106,12 @@ class ApplicationEntry extends StatelessWidget {
           if (snapshot.data == null) {
             // TODO : change single proviers as multiple provider
             return ChangeNotifierProvider<LoginStore>.value(
-                value: injector.get<LoginStore>(), child: injector.get<AuthPage>());
+                value: injector.get<LoginStore>(),
+                child: injector.get<AuthPage>());
           } else {
             return ChangeNotifierProvider<UserStore>.value(
-                value: injector.get<UserStore>(), child: injector.get<RoomSearcher>());
+                value: injector.get<UserStore>(),
+                child: injector.get<RoomSearcher>());
           }
         });
   }

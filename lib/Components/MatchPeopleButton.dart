@@ -20,7 +20,6 @@ class MatchPeopleButton extends StatelessWidget {
   OnDisconnect _disconnectionSchedule;
 
   MatchPeopleButton() {
-    print('compoents initalize');
     _roomSubscription = null;
     _firebaseRealtime = FirebaseWrapper();
     _disconnectionSchedule = null;
@@ -43,7 +42,7 @@ class MatchPeopleButton extends StatelessWidget {
               )),
             ),
             shape: CircleBorder(),
-            elevation: 10,
+            elevation: 2,
             color: Colors.amberAccent,
             onPressed: () async {
               Navigator.of(context).push(ModalAnimation()); // animation start
