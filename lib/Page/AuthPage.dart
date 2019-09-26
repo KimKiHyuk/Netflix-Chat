@@ -29,17 +29,7 @@ class AuthPage extends StatelessWidget {
                 child: LoginComponent(),
               ),
             ]),
-          Container(
-            child: Consumer<LoginStore>(
-              builder: (context, loginStore, child) =>
-                GestureDetector(
-                  onTap: () {
-                    loginStore.LoginJoinSwitch();
-                  },
-                  child: Text(loginStore.isJoin ? '계정이 있으신가요? 여기를 터치하여 로그인하세요' : '계정이 없으신가요? 여기를 터치하여 계정을 만들어보세요'),
-                ),
-            )
-          )],
+         ],
         ),
 
       ),

@@ -20,26 +20,33 @@ class RoomSearcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _matchButton = MatchPeopleButton();
-    return Center(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+    return SingleChildScrollView(
+        child: Center(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+          Row(
             children: <Widget>[
-              Row(children: <Widget>[
-                IconButton(icon: Icon(Icons.arrow_back),
-                  onPressed: () {
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
                   _matchButton.connectionClear();
                   FirebaseAuth.instance.signOut();
-                },),
-              ],),
-          Center(child: Column(
-            children: <Widget>[
-              PeopleSelectorComponents(),
-              ArrowUnderComponents(),
-              _matchButton,
+                },
+              ),
             ],
-          ),)
+          ),
+          Center(
+            child: Column(
+              children: <Widget>[
+                PeopleSelectorComponents(),
+                ArrowUnderComponents(),
+                _matchButton,
+              ],
+            ),
+          )
           // TODO: when animation is activating, stop animation button is clicked again
-        ]));
+        ])));
   }
 }
