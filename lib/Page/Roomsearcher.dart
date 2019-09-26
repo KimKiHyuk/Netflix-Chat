@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:netflix_together/Components/ArrowToUnderComponents.dart';
 import 'package:netflix_together/Components/CurrentAppUserCounter.dart';
+import 'package:netflix_together/Components/InputNameComponents.dart';
 import 'package:netflix_together/Components/LoadingAnimation.dart';
 import 'package:netflix_together/Components/MatchPeopleButton.dart';
 import 'package:netflix_together/Components/PeopleSelectorComponents.dart';
@@ -40,6 +41,8 @@ class RoomSearcher extends StatelessWidget {
           Center(
             child: Column(
               children: <Widget>[
+                InputNameComponents(),
+                ArrowUnderComponents(),
                 PeopleSelectorComponents(),
                 ArrowUnderComponents(),
                 _matchButton,

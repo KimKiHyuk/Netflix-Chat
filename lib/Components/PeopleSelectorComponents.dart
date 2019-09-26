@@ -20,12 +20,12 @@ class PeopleSelector extends State<PeopleSelectorComponents> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        Text('넷플릭스 계정을 몇명과 공유하고싶나요?'),
         Container(
-            margin: EdgeInsets.only(top: size.height * 0.1),
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),

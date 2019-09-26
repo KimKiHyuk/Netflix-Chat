@@ -4,24 +4,18 @@ import 'package:flutter/foundation.dart';
 class UserStore extends ChangeNotifier {
   int _onlineUser;
   int _partyPeople;
-  String _email;
+  String _name;
 
   void Initalize() {
     _onlineUser = 0;
     _partyPeople = 4;
-    _email = null;
-
+    _name = 'default';
     print('UserStore initalize done');
   }
 
   int get OnlineUserCount => _onlineUser;
   int get partyPeople => _partyPeople;
-  String get email => _email;
-
-  void setEmail(String value) {
-    _email = value;
-    notifyListeners();
-  }
+  String get name => _name;
 
   void SetOnlineUserCount(int value) {
     _onlineUser = value;
@@ -30,6 +24,11 @@ class UserStore extends ChangeNotifier {
 
   void SetPartyPeople(int value) {
     _partyPeople =  value;
+    notifyListeners();
+  }
+
+  void setName(String value) {
+    _name = value;
     notifyListeners();
   }
 }
