@@ -3,6 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ModalAnimation extends ModalRoute<void> {
+
+  Function _disposeFunction;
+
+  ModalAnimation(void connectionClear()) {
+    _disposeFunction = connectionClear;
+  }
   @override
   Duration get transitionDuration => Duration(milliseconds: 500);
 
@@ -74,7 +80,7 @@ class ModalAnimation extends ModalRoute<void> {
 
   @override
   void dispose() {
-    print('animation dispose');
+    _disposeFunction();
     super.dispose();
   }
 }

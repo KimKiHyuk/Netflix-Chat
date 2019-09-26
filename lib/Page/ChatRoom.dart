@@ -49,77 +49,62 @@ class _ChatState extends State<ChatRoom> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Room - '),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                print('back to select view');
-                Navigator.of(context).pop();
-              })
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _firestore
-                    .collection(path) // TODO: refactor
-                    .orderBy('date')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData)
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-
-                  List<DocumentSnapshot> docs = snapshot.data.documents;
-
-                  List<Widget> messages = docs
-                      .map((doc) => Message(
-                            name: doc.data['name'],
-                            text: doc.data['text'],
-                            me: name == doc.data['name'],
-                          ))
-                      .toList();
-
-                  return ListView(
-                    controller: scrollController,
-                    children: <Widget>[
-                      ...messages,
-                    ],
-                  );
-                },
-              ),
-            ),
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "메세지를 입력해주세요.",
-                        border: const OutlineInputBorder(),
-                      ),
-                      controller: messageController,
-                    ),
-                  ),
-                  Expanded(
-                    child: RaisedButton(
-                      child: Text("전송"),
-                      onPressed: () => chatSendingCallback(),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          title: Text('Netflix chat'),
         ),
-      ),
-    );
+        body: SafeArea(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: _firestore
+                      .collection(path) // TODO: refactor
+                      .orderBy('date')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+
+                    List<DocumentSnapshot> docs = snapshot.data.documents;
+
+                    List<Widget> messages = docs
+                        .map((doc) => Message(
+                              name: doc.data['name'],
+                              text: doc.data['text'],
+                              me: name == doc.data['name'],
+                            ))
+                        .toList();
+
+                    return ListView(
+                      controller: scrollController,
+                      children: <Widget>[
+                        ...messages,
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Container(
+                  child: Row(children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "메세지를 입력해주세요.",
+                      border: const OutlineInputBorder(),
+                    ),
+                    controller: messageController,
+                  ),
+                ),
+                Container(
+                    child: IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () => chatSendingCallback(),
+                    )),
+              ]))
+            ])));
   }
 }
 
@@ -138,11 +123,13 @@ class Message extends StatelessWidget {
         crossAxisAlignment:
             me ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            name,
+          Container(
+            child: Text(
+              name,
+            ),
           ),
           Material(
-            color: me ? Colors.teal : Colors.red,
+            color: me ? Colors.yellow : Colors.white,
             borderRadius: BorderRadius.circular(10.0),
             elevation: 6.0,
             child: Container(
@@ -150,6 +137,7 @@ class Message extends StatelessWidget {
               child: Text(
                 text,
               ),
+              margin: EdgeInsets.only(left: 30, right: 30),
             ),
           )
         ],
