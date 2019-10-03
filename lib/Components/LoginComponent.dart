@@ -11,6 +11,8 @@ import 'package:netflix_together/Store/LoginStore.dart';
 import 'package:netflix_together/validator/validator.dart';
 import 'package:provider/provider.dart';
 
+import 'AuthenticationAlertComponent.dart';
+
 class LoginComponent extends StatelessWidget {
   final injector = Injector.getInjector();
   final GlobalKey<FormState> _formKey =
@@ -63,44 +65,7 @@ class LoginComponent extends StatelessWidget {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return new AlertDialog(
-              title: Text('인증번호 입력'),
-              content: TextFormField(
-                controller: _smsController,
-                decoration: InputDecoration(
-                    icon: Icon(Icons.lock), labelText: '인증번호를 입력해주세요'),
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              contentPadding: EdgeInsets.all(10.0),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () async {
-                    String _title = '인증 성공';
-                    String _message = '휴대폰 인증에 성공했습니다. 자동으로 로그인합니다.';
-                    String _signResult = await _trySigninWithCredential();
-                    switch (_signResult) {
-                      case '':
-                        Navigator.pop(context);
-                        break;
-                      case 'ERROR_INVALID_VERIFICATION_CODE':
-                        _title = '인증 실패';
-                        _message = '인증 코드가 틀렸습니다.';
-                        break;
-                      default:
-                        _title = '알 수 없는 오류';
-                        _message = '인증과정에서 알 수 없는 오류가 발생했습니다. 다시 시도해주세요.';
-                    }
-                    Flushbar(
-                      title: _title,
-                      message: _message,
-                      duration: Duration(seconds: 3),
-                    )..show(context);
-                    // await signIn();
-                  },
-                  child: Text('확인'),
-                )
-              ]);
+          return AuthenticationAlertComponent(_smsController, _trySigninWithCredential);
         });
   }
 
