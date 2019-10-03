@@ -41,7 +41,7 @@ class RoomSearcher extends StatelessWidget {
               )),
           Container(margin: EdgeInsets.only(top: size.height*0.2),),
           Align(
-            alignment: Alignment.center,
+            alignment: Alignment.bottomCenter,
             child: Column(
               children: <Widget>[
                 InputNameComponents(),
@@ -51,8 +51,7 @@ class RoomSearcher extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-              child: Align(
+          Container(child:Align(
             alignment: Alignment.bottomCenter,
             child: _matchButton,
           ))

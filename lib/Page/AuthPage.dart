@@ -17,7 +17,6 @@ class AuthPage extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     return Center(
-      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -31,8 +30,6 @@ class AuthPage extends StatelessWidget {
             ]),
          ],
         ),
-
-      ),
     );
   }
 }

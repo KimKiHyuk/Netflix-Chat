@@ -88,7 +88,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
       body: SafeArea(
-        child: ApplicationEntry(),
+        child: SingleChildScrollView(child: ApplicationEntry()),
       ),
       backgroundColor: Color.fromRGBO(64, 62, 62, 1),
     ));

@@ -35,7 +35,7 @@ class MatchPeopleButton extends StatelessWidget {
 
     return SizedBox(
       height: size.height * 0.1,
-      width: size.width,
+      width: size.width * 0.7,
       child: Consumer<UserStore>(
         builder: (context, userStore, child) => RaisedButton(
             child: Center(
@@ -47,7 +47,7 @@ class MatchPeopleButton extends StatelessWidget {
                 Text('파티 찾기'),
               ],
             )),
-            elevation: 2,
+            elevation: 10,
             color: Colors.red,
             onPressed: () async {
               if (validator.stringSatisfiedWithName(userStore.name)) {
