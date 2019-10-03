@@ -44,7 +44,7 @@ class LoginComponent extends StatelessWidget {
     };
 
     final PhoneVerificationFailed verifiFailed = (AuthException exception) {
-      print('error code : ' + exception.code);
+      print('error code : ' + exception.message);
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -110,7 +110,6 @@ class LoginComponent extends StatelessWidget {
           verificationId: verificationId, smsCode: _smsController.value.text);
 
       var user = await FirebaseAuth.instance.signInWithCredential(credential);
-      print('user is ' + user.toString());
     } on PlatformException catch (error) {
       print('error code is ' + error.code);
       return error.code;
@@ -123,6 +122,7 @@ class LoginComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     final double size = MediaQuery.of(context).size.width;
     return Card(
+        color: Colors.white30,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
@@ -135,17 +135,23 @@ class LoginComponent extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      TextFormField(
+                      TextField(
                         controller: _phoneController,
                         decoration: InputDecoration(
-                            icon: Icon(Icons.smartphone),
-                            labelText: '휴대폰 번호를 입력해주세요 (01012345678'),
+                          hintText: '인증을 위해 휴대폰 번호를 입력해주세요.',
+                          icon: Icon(Icons.smartphone, color: Colors.grey,),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        ),
                       ),
                       Container(
                           margin: EdgeInsets.only(top: 15.0),
                           alignment: Alignment(0.0, 0.0),
                           child: RaisedButton(
-                              color: Colors.cyan,
+                              color: Colors.redAccent,
                               child: SizedBox(
                                 width: size * 0.5,
                                 child: Text(

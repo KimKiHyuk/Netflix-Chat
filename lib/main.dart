@@ -90,7 +90,7 @@ class MainApp extends StatelessWidget {
       body: SafeArea(
         child: ApplicationEntry(),
       ),
-      backgroundColor: Color.fromRGBO(56, 182, 255, 1),
+      backgroundColor: Color.fromRGBO(64, 62, 62, 1),
     ));
   }
 }

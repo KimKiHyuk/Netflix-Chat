@@ -39,15 +39,11 @@ class MatchPeopleButton extends StatelessWidget {
             child: SizedBox(
               width: size.width * 0.4,
               height: size.height * 0.2,
-              child: Center(
-                  child: Icon(
-                Icons.play_arrow,
-                size: 30,
-              )),
+              child: Center(child: Text('파티 찾기')),
             ),
             shape: CircleBorder(),
             elevation: 2,
-            color: Colors.amberAccent,
+            color: Colors.cyanAccent,
             onPressed: () async {
               if (validator.stringSatisfiedWithName(userStore.name)) {
                 Navigator.of(context)
