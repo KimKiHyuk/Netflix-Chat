@@ -50,7 +50,11 @@ class _ChatState extends State<ChatRoom> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Netflix chat'),
+          backgroundColor: Colors.black,
+          title: Text(
+            'Netflix Chat',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         body: SafeArea(
             child: Column(
@@ -90,19 +94,22 @@ class _ChatState extends State<ChatRoom> {
               Container(
                   child: Row(children: <Widget>[
                 Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "메세지를 입력해주세요.",
-                      border: const OutlineInputBorder(),
+                    flex: 6,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "메세지를 입력해주세요.",
+                          border: const OutlineInputBorder(),
+                        ),
+                        controller: messageController,
+                      ),
                     ),
-                    controller: messageController,
-                  ),
-                ),
-                Container(
-                    child: IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () => chatSendingCallback(),
-                    )),
+                Expanded(
+                    flex: 1,
+                        child: IconButton(
+                          color: Colors.black,
+                          icon: Icon(Icons.send),
+                          onPressed: () => chatSendingCallback(),
+                        )),
               ]))
             ])));
   }
@@ -119,21 +126,24 @@ class Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(left: 10, right: 10),
       child: Column(
         crossAxisAlignment:
             me ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            child: Text(
-              name,
-            ),
+            child: !me ? Container(margin: EdgeInsets.only(top: 10, bottom : 10, left: 10), child:Text(
+               name,
+              style: TextStyle(fontWeight: FontWeight.bold)),
+            ) : Container(margin: EdgeInsets.only(top: 10, bottom: 10,),),
           ),
           Material(
             color: me ? Colors.yellow : Colors.white,
             borderRadius: BorderRadius.circular(10.0),
             elevation: 6.0,
+
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5.0),
               child: Text(
                 text,
               ),
