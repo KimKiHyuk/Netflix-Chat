@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 class InputNameComponents extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final injector = Injector.getInjector().get<Validator>();
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -16,10 +17,22 @@ class InputNameComponents extends StatelessWidget {
         child: Consumer<UserStore>(
           builder: (context, userStore, child) => Column(
             children: <Widget>[
-              Text('채팅에 참여할 이름을 입력해주세요.'),
+              Text(
+                '채팅에 참여할 이름을 입력해주세요.',
+                style: TextStyle(color: Colors.white),
+              ),
               TextFormField(
+                style: TextStyle(color: Colors.white),
                 controller: _nameController,
-                decoration: InputDecoration(labelText: '이름을 입력해주세요'),
+                decoration: InputDecoration(
+                  hintText: '이름을 입력해주세요',
+                  hintStyle: TextStyle(color: Colors.white10),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey)),
+                ),
                 onChanged: (name) => {
                   userStore.setName(name),
                 },

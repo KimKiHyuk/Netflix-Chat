@@ -6,8 +6,7 @@ class ArrowUnderComponents extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return Container(
       child: Column(children: <Widget>[
-        Icon(Icons.keyboard_arrow_down, size: 30,),
-        Icon(Icons.keyboard_arrow_down, size: 30,),
+        //Divider(thickness: 1, color: Colors.white, endIndent: size.width * 0.1, indent: size.width * 0.1,),
       ],),
       margin:
           EdgeInsets.only(top: size.height * 0.05, bottom: size.height * 0.05),

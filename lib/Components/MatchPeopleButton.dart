@@ -33,17 +33,22 @@ class MatchPeopleButton extends StatelessWidget {
     final account = Injector.getInjector().get<AccountService>().user;
     final validator = Injector.getInjector().get<Validator>();
 
-    return Container(
+    return SizedBox(
+      height: size.height * 0.1,
+      width: size.width,
       child: Consumer<UserStore>(
         builder: (context, userStore, child) => RaisedButton(
-            child: SizedBox(
-              width: size.width * 0.4,
-              height: size.height * 0.2,
-              child: Center(child: Text('파티 찾기')),
-            ),
-            shape: CircleBorder(),
+            child: Center(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.search),
+                Text('파티 찾기'),
+              ],
+            )),
             elevation: 2,
-            color: Colors.cyanAccent,
+            color: Colors.red,
             onPressed: () async {
               if (validator.stringSatisfiedWithName(userStore.name)) {
                 Navigator.of(context)

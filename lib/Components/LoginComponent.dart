@@ -104,6 +104,7 @@ class LoginComponent extends StatelessWidget {
                         controller: _phoneController,
                         decoration: InputDecoration(
                           hintText: '인증을 위해 휴대폰 번호를 입력해주세요.',
+                          hintStyle: TextStyle(color: Colors.blue),
                           icon: Icon(Icons.smartphone, color: Colors.grey,),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),

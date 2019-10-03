@@ -20,36 +20,42 @@ class RoomSearcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     var _matchButton = MatchPeopleButton();
-    return SingleChildScrollView(
-        child: Center(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-          Row(
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  _matchButton.connectionClear();
-                  FirebaseAuth.instance.signOut();
-                },
-              ),
-            ],
-          ),
-          Center(
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _matchButton.connectionClear();
+                    FirebaseAuth.instance.signOut();
+                  },
+                ),
+              )),
+          Container(margin: EdgeInsets.only(top: size.height*0.2),),
+          Align(
+            alignment: Alignment.center,
             child: Column(
               children: <Widget>[
                 InputNameComponents(),
                 ArrowUnderComponents(),
                 PeopleSelectorComponents(),
                 ArrowUnderComponents(),
-                _matchButton,
               ],
             ),
-          )
-          // TODO: when animation is activating, stop animation button is clicked again
-        ])));
+          ),
+          Expanded(
+              child: Align(
+            alignment: Alignment.bottomCenter,
+            child: _matchButton,
+          ))
+        ]);
   }
 }

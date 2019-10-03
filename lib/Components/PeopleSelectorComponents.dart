@@ -24,8 +24,9 @@ class PeopleSelector extends State<PeopleSelectorComponents> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text('넷플릭스 계정을 몇명과 공유하고싶나요?'),
+        Text('본인을 포함한 파티원 수를 선택해주세요', style: TextStyle(color: Colors.white),),
         Container(
+            margin: EdgeInsets.only(top: 20),
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
@@ -36,26 +37,29 @@ class PeopleSelector extends State<PeopleSelectorComponents> {
                   width: 0.80),
             ),
             child: Consumer<UserStore>(
-                builder: (context, userStore, child) => DropdownButton<String>(
-                      icon: Icon(Icons.people),
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                      value: _dropDownValue,
-                      items: _peopleList
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String newValue) async {
-                        setState(() {
-                          userStore.SetPartyPeople(
-                              int.parse(newValue.substring(0, 1)));
-                          _dropDownValue = newValue;
-                          print('value is changed ' + _dropDownValue);
-                        });
-                      },
-                    ))),
+                builder: (context, userStore, child) => Theme(
+                  data: Theme.of(context).copyWith(canvasColor: Colors.grey),
+                  child: DropdownButton<String>(
+                    icon: Icon(Icons.people),
+                    style:  TextStyle(color: Colors.white, fontSize: 18),
+                    value: _dropDownValue,
+                    items: _peopleList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String newValue) async {
+                      setState(() {
+                        userStore.SetPartyPeople(
+                            int.parse(newValue.substring(0, 1)));
+                        _dropDownValue = newValue;
+                        print('value is changed ' + _dropDownValue);
+                      });
+                    },
+                  ),
+                ))),
       ],
     );
   }
