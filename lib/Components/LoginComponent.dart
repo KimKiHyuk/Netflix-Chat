@@ -46,18 +46,51 @@ class LoginComponent extends StatelessWidget {
     };
 
     final PhoneVerificationFailed verifiFailed = (AuthException exception) {
-      print('error code : ' + exception.message);
+      errorPhoneBar(context, exception);
     };
 
+    FirebaseAuth.instance.setLanguageCode('kr');
+
+
+    String _processed_phone = _phoneController.value.text;
+
+    print(_processed_phone);
+    if (_processed_phone.startsWith("+82")) {
+      print('start with 82');
+      print(_processed_phone);
+
+    }
+
+    if (_processed_phone.startsWith("0")) {
+      print('start with 0');
+      _processed_phone = _processed_phone.replaceFirst("0", "+82");
+      print(_processed_phone);
+    }
+
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: _phoneController.value.text,
+        phoneNumber: _processed_phone,
         codeAutoRetrievalTimeout: autoRetrive,
         codeSent: smsCodeSent,
         timeout: const Duration(seconds: 5),
         verificationCompleted: verifiedSuccess,
         verificationFailed: verifiFailed);
+    print('last pang');
 
     return '인증이 성공적으로 되었습니다';
+  }
+
+  void errorPhoneBar(BuildContext context, AuthException exception) {
+    String _message;
+    if (exception.code == 'invalidCredential' ||
+        exception.code == 'verifyPhoneNumberError') {
+      _message = '전화번호 양식이 틀렸습니다. 다음과 같이 입력해주세요: 010xxxxxxxx';
+    } else {
+      _message = '전화번호 입력 과정에서 알 수 없는 오류가 발생했습니다. 다시 시도해주세요.';
+    }
+    print('error cod2e : ' + exception.code);
+
+    final snackBar = SnackBar(content: Text(_message));
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   Future<bool> smsCodeDialog(BuildContext context) {
@@ -65,22 +98,30 @@ class LoginComponent extends StatelessWidget {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return AuthenticationAlertComponent(_smsController, _trySigninWithCredential);
+          return AuthenticationAlertComponent(
+              _smsController, _trySigninWithCredential);
         });
   }
 
   Future<String> _trySigninWithCredential() async {
     try {
+
+      if (_smsController.value.text.isEmpty) {
+        return '';
+      }
+
       final AuthCredential credential = PhoneAuthProvider.getCredential(
           verificationId: verificationId, smsCode: _smsController.value.text);
 
-      var user = await FirebaseAuth.instance.signInWithCredential(credential);
+
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
     } on PlatformException catch (error) {
       print('error code is ' + error.code);
       return error.code;
     }
 
-    return ''; //return String.empty()
+    return 'ok';
   }
 
   @override
@@ -103,14 +144,18 @@ class LoginComponent extends StatelessWidget {
                       TextField(
                         controller: _phoneController,
                         decoration: InputDecoration(
+                          hintMaxLines: 2,
                           hintText: '인증을 위해 휴대폰 번호를 입력해주세요.',
                           hintStyle: TextStyle(color: Colors.white),
-                          icon: Icon(Icons.smartphone, color: Colors.grey,),
+                          icon: Icon(
+                            Icons.smartphone,
+                            color: Colors.grey,
+                          ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                           ),
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey)),
+                              borderSide: BorderSide(color: Colors.grey)),
                         ),
                       ),
                       Container(
@@ -128,7 +173,10 @@ class LoginComponent extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
                               onPressed: () async {
-                                if (_formKey.currentState.validate()) {
+                                if (_formKey.currentState.validate() &&
+                                    validator.stringNullOrEmptyValadator(
+                                        _phoneController.value.text)) {
+                                  print('go login');
                                   await _login(context);
                                 }
                               }))

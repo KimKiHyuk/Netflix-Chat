@@ -94,24 +94,24 @@ class _ChatState extends State<ChatRoom> {
               Container(
                   child: Row(children: <Widget>[
                 Expanded(
-                    flex: 6,
-                      child: TextField(
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                          hintText: "메세지를 입력해주세요.",
-                          border: const OutlineInputBorder(),
-                        ),
-                        controller: messageController,
-                      ),
+                  flex: 6,
+                  child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: "메세지를 입력해주세요.",
+                      border: const OutlineInputBorder(),
                     ),
+                    controller: messageController,
+                  ),
+                ),
                 Expanded(
                     flex: 1,
-                        child: IconButton(
-                          color: Colors.black,
-                          icon: Icon(Icons.send),
-                          onPressed: () => chatSendingCallback(),
-                        )),
+                    child: IconButton(
+                      color: Colors.black,
+                      icon: Icon(Icons.send),
+                      onPressed: () => chatSendingCallback(),
+                    )),
               ]))
             ])));
   }
@@ -127,6 +127,7 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10),
       child: Column(
@@ -134,22 +135,31 @@ class Message extends StatelessWidget {
             me ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            child: !me ? Container(margin: EdgeInsets.only(top: 10, bottom : 10, left: 10), child:Text(
-               name,
-              style: TextStyle(fontWeight: FontWeight.bold)),
-            ) : Container(margin: EdgeInsets.only(top: 10, bottom: 10,),),
+            child: !me
+                ? Container(
+                    margin: EdgeInsets.only(
+                        top: size.height * 0.01,
+                        bottom: size.height * 0.01,
+                        left: size.width * 0.02),
+                    child: Text(name,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  )
+                : Container(
+                    margin: EdgeInsets.only(
+                        top: size.height * 0.01,
+                        bottom: size.height * 0.01,
+                        right: size.width * 0.02),
+                  ),
           ),
           Material(
             color: me ? Colors.yellow : Colors.white,
             borderRadius: BorderRadius.circular(10.0),
             elevation: 6.0,
-
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
               child: SelectableText(
                 text,
               ),
-              margin: EdgeInsets.only(left: 30, right: 30),
             ),
           )
         ],
