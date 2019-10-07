@@ -111,9 +111,8 @@ class ModalAnimation extends ModalRoute<void> {
 
   @override
   void dispose() {
-    print('dispose');
     Fluttertoast.cancel();
-    _disposeFunction();
+    _disposeFunction();  // TODO : Use event
     super.dispose();
   }
 }

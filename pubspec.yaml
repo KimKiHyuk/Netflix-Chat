@@ -31,12 +31,18 @@ dependencies:
   flutter_simple_dependency_injection: any
   flutter_spinkit: ^2.1.0
   flushbar: ^1.9.0
+  fluttertoast: ^3.1.3
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.7.3"
 
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "lib/assets/images/netflix-chat-logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -53,7 +59,7 @@ flutter:
   assets:
     - lib/assets/images/netflix.jpg
     - lib/assets/images/black-netflix.jpg
-    - lib/assets/images/background.png
+    - lib/assets/images/background.jpg
     - lib/assets/images/netflix-chat-logo.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

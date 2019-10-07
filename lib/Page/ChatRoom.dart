@@ -96,6 +96,8 @@ class _ChatState extends State<ChatRoom> {
                 Expanded(
                     flex: 6,
                       child: TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
                         decoration: InputDecoration(
                           hintText: "메세지를 입력해주세요.",
                           border: const OutlineInputBorder(),
@@ -143,8 +145,8 @@ class Message extends StatelessWidget {
             elevation: 6.0,
 
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5.0),
-              child: Text(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
+              child: SelectableText(
                 text,
               ),
               margin: EdgeInsets.only(left: 30, right: 30),

@@ -52,7 +52,7 @@ class MatchPeopleButton extends StatelessWidget {
             onPressed: () async {
               if (validator.stringSatisfiedWithName(userStore.name)) {
                 Navigator.of(context)
-                    .push(ModalAnimation(connectionClear)); // animation start
+                    .push(ModalAnimation(connectionClear)); // // TODO : Use event
                 String path = 'chat/room_' + userStore.partyPeople.toString();
                 connectionClear();
                 _firebaseRealtime.GetUserStream(
