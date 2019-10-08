@@ -9,7 +9,7 @@ class UserStore extends ChangeNotifier {
   void Initalize() {
     _onlineUser = 0;
     _partyPeople = 4;
-    _name = 'default';
+    _name = null;
     print('UserStore initalize done');
   }
 
