@@ -30,7 +30,7 @@ class LoginComponent extends StatelessWidget {
     validator = injector.get<Validator>();
   }
 
-  Future<String> _login(BuildContext context) async {
+  Future<void> _login(BuildContext context) async {
     final PhoneCodeAutoRetrievalTimeout autoRetrive = (String verId) {
       this.verificationId = verId;
     };
@@ -42,52 +42,43 @@ class LoginComponent extends StatelessWidget {
     };
 
     final PhoneVerificationCompleted verifiedSuccess = (AuthCredential user) {
-      print('verrfied ' + user.toString());
+      // When verification succeed
     };
 
-    final PhoneVerificationFailed verifiFailed = (AuthException exception) {
-      errorPhoneBar(context, exception);
+    final PhoneVerificationFailed verifiedFailed = (AuthException exception) {
+      showErrorSnackBar(context, exception);
     };
 
-    FirebaseAuth.instance.setLanguageCode('kr');
+    String _processedPhone = _phoneController.value.text;
 
-
-    String _processed_phone = _phoneController.value.text;
-
-    print(_processed_phone);
-    if (_processed_phone.startsWith("+82")) {
-      print('start with 82');
-      print(_processed_phone);
-
-    }
-
-    if (_processed_phone.startsWith("0")) {
-      print('start with 0');
-      _processed_phone = _processed_phone.replaceFirst("0", "+82");
-      print(_processed_phone);
+    if (_processedPhone == '+15555215556' ||
+        _processedPhone == '+15555215558' ||
+        _processedPhone == '+15555215560' ||
+        _processedPhone == '+15555215554') {
+      print('test device');
+    } else if (_processedPhone.startsWith("0")) {
+      _processedPhone = _processedPhone.replaceFirst("0", "+82");
     }
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: _processed_phone,
+        phoneNumber: _processedPhone,
         codeAutoRetrievalTimeout: autoRetrive,
         codeSent: smsCodeSent,
         timeout: const Duration(seconds: 5),
         verificationCompleted: verifiedSuccess,
-        verificationFailed: verifiFailed);
-    print('last pang');
-
-    return '인증이 성공적으로 되었습니다';
+        verificationFailed: verifiedFailed);
   }
 
-  void errorPhoneBar(BuildContext context, AuthException exception) {
+  void showErrorSnackBar(BuildContext context, AuthException exception) {
     String _message;
-    if (exception.code == 'invalidCredential' ||
-        exception.code == 'verifyPhoneNumberError') {
-      _message = '전화번호 양식이 틀렸습니다. 다음과 같이 입력해주세요: 010xxxxxxxx';
+    if (exception.code == 'invalidCredential') {
+      _message = '전화번호 양식이 틀렸습니다. ->\n010xxxxxxxx\n010-xxxx-xxxx';
+    } else if (exception.code == 'verifyPhoneNumberError') {
+      _message = '잘못된 전화번호입니다.';
     } else {
       _message = '전화번호 입력 과정에서 알 수 없는 오류가 발생했습니다. 다시 시도해주세요.';
     }
-    print('error cod2e : ' + exception.code);
+    print('error code : ' + exception.code);
 
     final snackBar = SnackBar(content: Text(_message));
     Scaffold.of(context).showSnackBar(snackBar);
@@ -105,15 +96,12 @@ class LoginComponent extends StatelessWidget {
 
   Future<String> _trySigninWithCredential() async {
     try {
-
       if (_smsController.value.text.isEmpty) {
         return '';
       }
 
       final AuthCredential credential = PhoneAuthProvider.getCredential(
           verificationId: verificationId, smsCode: _smsController.value.text);
-
-
 
       await FirebaseAuth.instance.signInWithCredential(credential);
     } on PlatformException catch (error) {
@@ -126,7 +114,7 @@ class LoginComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double size = MediaQuery.of(context).size.width;
+    final Size size = MediaQuery.of(context).size;
     return Card(
         color: Colors.white30,
         shape: RoundedRectangleBorder(
@@ -135,7 +123,7 @@ class LoginComponent extends StatelessWidget {
         elevation: 6,
         child: Padding(
             padding: EdgeInsets.only(
-                bottom: 10.0, left: 12.0, right: 12.0, top: 12.0),
+                bottom: size.height * 0.01, left: size.width * 0.02, right: size.width * 0.02, top: size.height * 0.01),
             child: Form(
                 key: _formKey,
                 child: Column(
@@ -159,12 +147,12 @@ class LoginComponent extends StatelessWidget {
                         ),
                       ),
                       Container(
-                          margin: EdgeInsets.only(top: 15.0),
+                          margin: EdgeInsets.only(top: size.height * 0.015),
                           alignment: Alignment(0.0, 0.0),
                           child: RaisedButton(
                               color: Colors.redAccent,
                               child: SizedBox(
-                                width: size * 0.5,
+                                width: size.width * 0.5,
                                 child: Text(
                                   '인증번호 보내기',
                                   textAlign: TextAlign.center,

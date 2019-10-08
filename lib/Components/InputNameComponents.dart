@@ -25,7 +25,7 @@ class InputNameComponents extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
                 controller: _nameController,
                 decoration: InputDecoration(
-                  hintText: '이름을 입력해주세요',
+                  hintText: userStore.name.isEmpty ? '이름을 입력해주세요' : userStore.name,
                   hintStyle: TextStyle(color: Colors.white10),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),

@@ -28,6 +28,7 @@ class AuthPage extends StatelessWidget {
                 child: LoginComponent(),
               ),
             ]),
+            Container(margin: EdgeInsets.only(bottom: size.height * 0.1))
          ],
         ),
     );

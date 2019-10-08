@@ -22,6 +22,8 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 
 bool bootStrap(Injector injector) {
   try {
+    FirebaseAuth.instance.setLanguageCode('ko');
+
     injector.get<AccountService>().Initalize();
     injector.get<LoginStore>().Initalize();
     injector.get<UserStore>().Initalize();
