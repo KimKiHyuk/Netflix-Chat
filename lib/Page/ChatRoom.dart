@@ -60,10 +60,6 @@ class _ChatState extends State<ChatRoom> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-              Message(
-                  name: '운영자',
-                  text: '넷플릭스 챗을 이용해주셔서 감사합니다.\n넷플릭스 계정을 자유롭게 공유하시길 바랍니다.\n뒤로가기 버튼으로 채팅방을 나가시면 다시 들어올 수 없으니 주의하시길 바랍니다.',
-                  me: false),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: _firestore
@@ -77,7 +73,6 @@ class _ChatState extends State<ChatRoom> {
                       );
 
                     List<DocumentSnapshot> docs = snapshot.data.documents;
-
                     List<Widget> messages = docs
                         .map((doc) => Message(
                               name: doc.data['name'],
@@ -85,6 +80,13 @@ class _ChatState extends State<ChatRoom> {
                               me: name == doc.data['name'],
                             ))
                         .toList();
+                    messages.insert( // first message
+                        0,
+                        Message(
+                            name: '운영자',
+                            text:
+                                '넷플릭스 챗을 이용해주셔서 감사합니다.\n넷플릭스 계정을 자유롭게 공유하시길 바랍니다.\n뒤로가기 버튼으로 채팅방을 나가시면 다시 들어올 수 없으니 주의하시길 바랍니다.',
+                            me: false));
 
                     return ListView(
                       controller: scrollController,
