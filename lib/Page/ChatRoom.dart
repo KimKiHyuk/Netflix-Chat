@@ -52,7 +52,7 @@ class _ChatState extends State<ChatRoom> {
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Text(
-            'Netflix Chat',
+            path.substring(path.length - 1 - (7 - 1), path.length) + '번 방',
             style: TextStyle(color: Colors.white),
           ),
         ),

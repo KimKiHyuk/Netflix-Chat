@@ -88,7 +88,7 @@ class MatchPeopleButton extends StatelessWidget {
               } else {
                 Flushbar(
                   title: '이름이 정해지지 않았습니다',
-                  message: '채팅에 사용될 이름을 위 입력칸에 넣어주세요',
+                  message: '채팅에 사용할 닉네임을 입력해주세요.',
                   duration: Duration(milliseconds: 3000),
                 )..show(context);
               }

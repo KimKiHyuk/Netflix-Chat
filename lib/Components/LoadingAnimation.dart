@@ -65,7 +65,7 @@ class ModalAnimation extends ModalRoute<void> {
                 style: TextStyle(color: Colors.white, fontSize: 15.0),
               ),
               Text(
-                '파티를 찾으면 푸쉬알람을 보내드릴게요.',
+                '파티를 찾으면 푸시 알람을 보내드릴게요.',
                 style: TextStyle(color: Colors.white, fontSize: 15.0),
               ),
               Container(

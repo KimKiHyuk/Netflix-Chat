@@ -51,12 +51,7 @@ class LoginComponent extends StatelessWidget {
 
     String _processedPhone = _phoneController.value.text;
 
-    if (_processedPhone == '+15555215556' ||
-        _processedPhone == '+15555215558' ||
-        _processedPhone == '+15555215560' ||
-        _processedPhone == '+15555215554') {
-      print('test device');
-    } else if (_processedPhone.startsWith("0")) {
+    if (_processedPhone.startsWith("0")) {
       _processedPhone = _processedPhone.replaceFirst("0", "+82");
     }
 
