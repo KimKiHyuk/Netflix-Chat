@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:netflix_together/Components/LoginComponent.dart';
 import 'package:netflix_together/Services/AccountService.dart';
@@ -37,12 +38,16 @@ class _ChatState extends State<ChatRoom> {
         'date': DateTime.now().toIso8601String().toString(),
       });
       messageController.clear();
-      scrollController.animateTo(
-        scrollController.position.maxScrollExtent,
-        curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 300),
-      );
+      scrollDown();
     }
+  }
+
+  void scrollDown() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   @override
@@ -71,7 +76,9 @@ class _ChatState extends State<ChatRoom> {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
-
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      scrollDown();
+                    });
                     List<DocumentSnapshot> docs = snapshot.data.documents;
                     List<Widget> messages = docs
                         .map((doc) => Message(
@@ -80,7 +87,8 @@ class _ChatState extends State<ChatRoom> {
                               me: name == doc.data['name'],
                             ))
                         .toList();
-                    messages.insert( // first message
+                    messages.insert(
+                        // first message
                         0,
                         Message(
                             name: '운영자',
@@ -89,6 +97,7 @@ class _ChatState extends State<ChatRoom> {
                             me: false));
 
                     return ListView(
+                      padding: EdgeInsets.only(bottom: size.height * 0.025),
                       controller: scrollController,
                       children: <Widget>[
                         ...messages,

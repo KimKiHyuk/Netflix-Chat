@@ -9,11 +9,6 @@ class AuthenticationAlertComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Flushbar(
-      title: '인증',
-      message: '인증 코드를 발송했습니다.',
-      duration: Duration(seconds: 3),
-    )..show(context);
     return new AlertDialog(
         title: Text('인증번호 입력'),
         content: TextFormField(

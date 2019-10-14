@@ -2,17 +2,17 @@ import 'package:flutter/foundation.dart';
 
 
 class LoginStore extends ChangeNotifier {
-  bool _isJoin;
+  bool _isSend;
 
   void Initalize() {
-    _isJoin = false;
+    _isSend = false;
     print('LoginStore initalize done');
   }
 
-  bool get isJoin => _isJoin;
+  bool get isSend => _isSend;
 
-  void LoginJoinSwitch() {
-    _isJoin = !_isJoin;
+  void sendButtonSwitch() {
+    _isSend = !_isSend;
     notifyListeners();
   }
 }

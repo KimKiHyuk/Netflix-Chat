@@ -8,6 +8,7 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:netflix_together/Data/User.dart';
 import 'package:netflix_together/FirebaseAPI/DataManipulator.dart';
 import 'package:netflix_together/Store/LoginStore.dart';
+import 'package:netflix_together/Store/UserStore.dart';
 import 'package:netflix_together/validator/validator.dart';
 import 'package:provider/provider.dart';
 
@@ -109,6 +110,7 @@ class LoginComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loginStore = Provider.of<LoginStore>(context);
     final Size size = MediaQuery.of(context).size;
     return Card(
         color: Colors.white30,
@@ -155,7 +157,7 @@ class LoginComponent extends StatelessWidget {
                               ),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
-                              onPressed: () async {
+                              onPressed: loginStore.isSend ?  () {} :  () async {
                                 if (_formKey.currentState.validate() &&
                                     validator.stringNullOrEmptyValadator(
                                         _phoneController.value.text)) {
