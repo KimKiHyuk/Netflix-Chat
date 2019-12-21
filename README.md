@@ -1,5 +1,5 @@
 # Netflix Chat (Netfli Share)
-### Flutter application to help you to share netflix account
+### Netflix-chat will help you to share netflix account
 
 ## Backend
 * Use firebase and lambda 
